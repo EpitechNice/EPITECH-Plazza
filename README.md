@@ -1,11 +1,11 @@
 <div align='center'>
 
-<img src=IMAGE alt="logo" width=WIDTH height=HEIGHT />
+<img src="./assets/icon/icon.png" alt="logo" width=64 height=64 />
 
-<h1>TOPIC</h1>
-<p>PROJECT_DESCRIPTION</p>
+<h1>Plazza</h1>
+<p>WHO SAID ANYTHING ABOUT PIZZAS?</p>
 
-<h4> <span> · </span> <a href="https://github.com/Tech0ne/PROJECT_NAME/doc/"> Documentation </a> <span> · </span> <a href="https://github.com/Tech0ne/PROJECT_NAME/issues"> Report Bug </a> <span> · </span> <a href="https://github.com/Tech0ne/PROJECT_NAME/issues"> Request Feature </a> </h4>
+<h4><a href="https://github.com/EpitechNice/EPITECH-Plazza/"> Documentation </a> <span> · </span> <a href="https://github.com/EpitechNice/PROJECT_NAME/issues"> Report Bug </a> <span> · </span> <a href="https://github.com/EpitechNice/PROJECT_NAME/issues"> Request Feature </a> </h4>
 
 
 </div>
@@ -98,7 +98,7 @@ COMMAND 2
 Clone the project
 
 ```bash
-PROJECT_URL
+https://github.com/EpitechNice/EPITECH-Plazza
 ```
 INSTRUCTION 1
 ```bash
@@ -130,13 +130,13 @@ COMMAND 2
 
 ## :wave: Contributing
 
-<a href="https://github.com/Tech0ne"> <img src="https://github.com/Tech0ne.png" width=64 height=64/> </a>
+<a href="https://github.com/Tech0ne"> <img src="https://github.com/Tech0ne.png" width=64 height=64/> </a> <a href="https://github.com/AelionDW"> <img src="https://github.com/AelionDW.png" width=64 height=64/> </a> <a href="https://github.com/deferdam"> <img src="https://github.com/deferdam.png" width=64 height=64/> </a>
 
 Contributions are always welcome!
 
 ### :scroll: Code of Conduct
 
-Please read the [Code of Conduct](PROJECT_URL/CODE_OF_CONDUCT.md)
+Please read the [Code of Conduct](https://github.com/EpitechNice/EPITECH-Plazza/CODE_OF_CONDUCT.md)
 
 ## :grey_question: FAQ
 
@@ -154,7 +154,7 @@ Distributed under the MIT License. See LICENSE.txt for more information.
 
 Tech0ne - [link](https://tech0ne.github.io) - clement.piasco@epitech.eu
 
-Project Link: [PROJECT_URL](PROJECT_URL)
+Project Link: [https://github.com/EpitechNice/EPITECH-Plazza](https://github.com/EpitechNice/EPITECH-Plazza)
 
 ## :gem: Acknowledgements
 

@@ -1,31 +1,43 @@
 cmake_minimum_required(VERSION 3.5)
 project(
-    PROJECT_NAME
+    plazza
 )
 
 set(
     CMAKE_CXX_STANDARD 20
 )
 
+set(CMAKE_CXX_FLAGS -rdynamic)
+
 add_compile_options(
     -Wall -Wextra -Werror
 )
 
+add_subdirectory(
+    ./lib/Flint
+)
 
 set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
-    ${PROJECT_SOURCE_DIR}/PROJECT_NAME
+    ${PROJECT_SOURCE_DIR}/plazza
 )
 
-add_executable(PROJECT_NAME
-    src/main.cpp
+add_executable(plazza
+    src/ExceptionsShowcase.cpp
+    src/Main.cpp
 )
 
-target_include_directories(PROJECT_NAME PUBLIC
+target_link_libraries(plazza PUBLIC flint)
+
+target_include_directories(plazza PUBLIC
     ./includes/
+    ./lib/Flint/includes/
 )
 
-add_custom_command(TARGET PROJECT_NAME
+set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
+  ${PROJECT_SOURCE_DIR}/lib/Flint/CMakeFiles/CMakeTmp)
+
+add_custom_command(TARGET plazza
     POST_BUILD
     COMMAND
-        cp PROJECT_NAME ${PROJECT_SOURCE_DIR}/PROJECT_NAME
+        cp plazza ${PROJECT_SOURCE_DIR}/plazza
 )
