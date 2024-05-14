@@ -83,7 +83,7 @@ namespace Flint::Exceptions
               Flint::Colors::F_BLUE  << fileInfos.first.first  << Flint::Colors::RESET << ":" <<
               Flint::Colors::F_RED   << fileInfos.first.second << Flint::Colors::RESET << std::endl << std::endl;
 
-        ss << this->what();
+        ss << this->_what;
         return ss.str();
     }
 
