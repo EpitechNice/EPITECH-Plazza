@@ -1,5 +1,6 @@
 #include <sstream>
-#include "manager.hpp"
+#include "Manager.hpp"
+#include "Kitchen.hpp"
 
 Manager Manager::instance;
 

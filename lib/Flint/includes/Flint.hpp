@@ -18,9 +18,11 @@
 #ifndef INCLUDED_FLINT_HPP
     #define INCLUDED_FLINT_HPP
 
+    #include "Headers.hpp"
+    #include "Inspection.hpp"
     #include "CxxABI.hpp"
     #include "Colors.hpp"
     #include "Exceptions.hpp"
-    #include "Inspection.hpp"
+    #include "Preprocessor.hpp"
 
 #endif

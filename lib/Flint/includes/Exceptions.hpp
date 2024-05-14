@@ -50,6 +50,24 @@ namespace Flint::Exceptions
                 Exception(what, infos)
             {}
     };
+
+    class ParsingError: public Flint::Exceptions::Exception
+    {
+        public:
+            ParsingError(std::string what = "Error while parsing.",
+                         std::pair<std::pair<std::string, std::size_t>, std::string> infos = {{"", 0}, ""}):
+                Exception(what, infos)
+            {}
+    };
+
+    class ArgsFromExecError: public Flint::Exceptions::Exception
+    {
+        public:
+            ArgsFromExecError(std::string what = "Error while executing program.",
+                              std::pair<std::pair<std::string, std::size_t>, std::string> infos = {{"", 0}, ""}):
+                Exception(what, infos)
+            {}
+    };
 }
 
 #endif

@@ -22,7 +22,8 @@ set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
 )
 
 add_executable(plazza
-    src/ExceptionsShowcase.cpp
+    src/Core/Core.cpp
+    src/Parsing/Parsing.cpp
     src/Main.cpp
 )
 
