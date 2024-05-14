@@ -27,12 +27,18 @@ void Manager::preparePizza(const std::string& pizza) {
     std::string name;
     std::string size;
     int multiplier;
+    std::map<Ingredients, int> requiredIngredients {
+        {Ingredients::Dough, 1},
+        {Ingredients::Tomato, 1},
+        {Ingredients::Gruyere, 1}
+        // a mettre les ingredients deffini par chaque pizza a balancer
+    };
 
     std::stringstream ss(pizza);
     ss >> name >> size >> multiplier;
     if (name == "Margarita") {
         for (auto& kitchen : kitchens) {
-            if (kitchen.isAvailable(size, {Ingredients::Dough, Ingredients::Tomato, Ingredients::Gruyere})) {
+            if (kitchen.isAvailable(size, requiredIngredients)) {
                 kitchen.preparePizza(name, size, multiplier);
                 return;
             }
