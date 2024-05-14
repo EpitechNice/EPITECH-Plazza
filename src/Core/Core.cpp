@@ -20,18 +20,25 @@ namespace Plazza
 {
     Core::Core(int argc, char **argv)
     {
+        if (argc == 2 &&
+            (std::string(argv[1]) == "-h" || std::string(argv[1]) == "--help")) {
+            this->usage(argv[0]);
+            std::exit(0);
+        }
         try {
             Parsing::get().parse(argc, argv);
         } catch (const Flint::Exceptions::Exception& e) {
             std::cerr << catch_exception(e) << std::endl;
-            exit(84);
+            std::exit(84);
         }
 
         std::cout << "Multiplier time: " << Parsing::get().getMultiplierTime() << std::endl;
         std::cout << "Nb cooks: " << Parsing::get().getNbCooks() << std::endl;
-        std::cout << "Replace time: " << Parsing::get().getReplaceTime() << std::endl;
+        std::cout << "Refill time: " << Parsing::get().getRefillTime() << std::endl;
     }
 
-    void Core::usage(void)
-    {}
+    void Core::usage(std::string filename)
+    {
+        std::cout << "Usage: " + filename + " [-h|--help] [MultipierTime] [NbCooks] [RefillTime]" << std::endl;
+    }
 }

@@ -16,9 +16,3 @@
  * ------------------------------------------------------------------------------------ */
 
 #include "Protocol.hpp"
-
-Protocol& Protocol::get()
-{
-    static Protocol instance;
-    return instance;
-}

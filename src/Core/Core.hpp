@@ -24,14 +24,12 @@ namespace Plazza
 {
     class Core
     {
-        private:
-        protected:
         public:
             Core(int argc, char **argv);
             ~Core() = default;
 
             void handleExec(int argc, char **argv);
-            void usage(void);
+            void usage(std::string filename);
     };
 }
 

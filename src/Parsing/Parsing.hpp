@@ -24,8 +24,8 @@ class Parsing
 {
     private:
         double _multiplierTime = 0;
-        int _nbCooks = 0;
-        std::size_t _replaceTime = 0;
+        std::size_t _nbCooks = 0;
+        std::size_t _refillTime = 0;
         Parsing() = default;
 
     public:
@@ -36,7 +36,7 @@ class Parsing
 
         double getMultiplierTime() const;
         int getNbCooks() const;
-        std::size_t getReplaceTime() const;
+        std::size_t getRefillTime() const;
 };
 
 #endif
