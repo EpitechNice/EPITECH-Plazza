@@ -1,5 +1,5 @@
 // server.cpp
-#include "serveur.hpp"
+#include "Serveur.hpp"
 #include <iostream>
 
 Serveur Serveur::instance;
