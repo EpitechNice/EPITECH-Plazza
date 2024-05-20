@@ -43,8 +43,8 @@ public:
     Kitchen();
     bool isAvailable(const std::string& size, const std::map<Ingredients, int>& requiredIngredients);
     void preparePizza(const std::string& name, const std::string& size, int multiplier);
-    void checkCooksStatus();
-    void checkIngredients();
+    int checkCooksStatus();
+    int checkIngredients();
     int calculateCookingTime(const std::string& name, const std::string& size, int multiplier);
 };
 

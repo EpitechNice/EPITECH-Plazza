@@ -13,13 +13,14 @@ void Manager::receiveOrder(const std::string& order) {
     std::string token;
     while (std::getline(ss, token, ';')) {
         orders.push_back(token);
+        manageKitchens();
     }
 }
 
 void Manager::manageKitchens() {
     for (auto& kitchen : kitchens) {
-        kitchen.checkCooksStatus();
-        kitchen.checkIngredients();
+        if (kitchen.checkCooksStatus() == 1 && kitchen.checkIngredients() == 1);
+            //supp la cuisine;
     }
 }
 

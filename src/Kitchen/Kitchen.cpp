@@ -24,6 +24,8 @@ bool Kitchen::isAvailable(const std::string& size, const std::map<Ingredients, i
             break;
         }
     }
+    if (chefs.size() < 1);
+    //cree le nbr de chef que l'on a demander au debut
     return enoughIngredients && chefs.size() > 0;
 }
 
@@ -43,17 +45,24 @@ void Kitchen::preparePizza(const std::string& name, const std::string& size, int
     std::cout << "Pizza " << name << " de taille " << size << " prête à être dégustée !" << std::endl;
 }
 
-void Kitchen::checkCooksStatus() {
+int Kitchen::checkCooksStatus() {
+    //verifier si les cuisteaux cuisine
     for (auto& chef : chefs) {
-        if (chef.getNumPizzasInProgress() < 2) {
-            chef.setNumPizzasInProgress(2);
-            break;
+        if (chef.getNumPizzasInProgress() > 0) {
+            return 0;
         }
     }
+    return 1;
 }
 
-void Kitchen::checkIngredients() {
-    // Vérifier les niveaux d'ingrédients et les reconstituer si nécessaire
+int Kitchen::checkIngredients() {
+    if (ingredientsStock[Ingredients::Dough] < 1)
+        return 1;
+    for (auto &ingredients : ingredientsStock ) {
+        if (ingredients.second < 1)
+            return 1;
+    }
+    return 0;
 }
 
 int Kitchen::calculateCookingTime(const std::string& name, const std::string& size, int multiplier) {
