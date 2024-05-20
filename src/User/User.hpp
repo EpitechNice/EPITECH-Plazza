@@ -7,6 +7,9 @@
 class User {
 public:
     void takeOrder(const std::string& order);
+
+private:
+    int nbrChefs = 0;
 };
 
 #endif // USER_HPP

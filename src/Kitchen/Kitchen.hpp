@@ -40,7 +40,7 @@ private:
     std::vector<Chef> chefs;
 
 public:
-    Kitchen();
+    Kitchen(int numChefs);
     bool isAvailable(const std::string& size, const std::map<Ingredients, int>& requiredIngredients);
     void preparePizza(const std::string& name, const std::string& size, int multiplier);
     int checkCooksStatus();

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <thread>
 
-Kitchen::Kitchen() {
+Kitchen::Kitchen(int numChefs) {
     ingredientsStock[Ingredients::Dough] = 5;
     ingredientsStock[Ingredients::Tomato] = 5;
     ingredientsStock[Ingredients::Gruyere] = 5;
@@ -13,6 +13,9 @@ Kitchen::Kitchen() {
     ingredientsStock[Ingredients::GoatCheese] = 5;
     ingredientsStock[Ingredients::ChiefLove] = 5;
     ingredientsStock[Ingredients::Steak] = 5;
+    for (int i = 0; i < numChefs; ++i) {
+        chefs.emplace_back(i);
+    }
 }
 
 bool Kitchen::isAvailable(const std::string& size, const std::map<Ingredients, int>& requiredIngredients) {
@@ -24,9 +27,7 @@ bool Kitchen::isAvailable(const std::string& size, const std::map<Ingredients, i
             break;
         }
     }
-    if (chefs.size() < 1);
-    //cree le nbr de chef que l'on a demander au debut
-    return enoughIngredients && chefs.size() > 0;
+    return enoughIngredients && !chefs.empty();
 }
 
 void Kitchen::preparePizza(const std::string& name, const std::string& size, int multiplier) {

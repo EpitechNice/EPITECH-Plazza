@@ -1,7 +1,6 @@
-// user.cpp
-#include "user.hpp"
-#include "manager.hpp"
+#include "User.hpp"
+#include "Manager.hpp"
 
 void User::takeOrder(const std::string& order) {
-    Manager::getInstance().receiveOrder(order);
+    Manager::getInstance().receiveOrder(order, nbrChefs);
 }
