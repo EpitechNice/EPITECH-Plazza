@@ -1,4 +1,6 @@
 #include <sstream>
+#include <chrono>
+#include <thread>
 #include "Manager.hpp"
 #include "Serveur.hpp"
 
@@ -8,7 +10,7 @@ Manager& Manager::getInstance() {
     return instance;
 }
 
-void Manager::receiveOrder(const std::string& order, int nbrChefs) {
+void Manager::receiveOrder(const std::string& order) {
     std::stringstream ss(order);
     std::string token;
     while (std::getline(ss, token, ';')) {
@@ -18,11 +20,11 @@ void Manager::receiveOrder(const std::string& order, int nbrChefs) {
 }
 
 void Manager::manageKitchens() {
-    for (auto it = kitchens.begin(); it != kitchens.end();) {
-        if (it->checkCooksStatus() == 1 && it->checkIngredients() == 1) {
-            it = kitchens.erase(it); // Supprime la cuisine si les conditions sont remplies
-        } else {
-            ++it;
+    const auto waitTime = std::chrono::seconds(10);
+    for (auto& kitchen : kitchens) {
+        if (kitchen.checkCooksStatus() == 1 && kitchen.checkIngredients() == 1) {
+            std::this_thread::sleep_for(waitTime);
+            kitchen.restockIngredients();
         }
     }
 }
@@ -30,10 +32,23 @@ void Manager::manageKitchens() {
 void Manager::preparePizza(const std::string& pizza) {
     std::string name;
     std::string size;
+    int quantity = 1;
     int multiplier;
 
+
     std::stringstream ss(pizza);
-    ss >> name >> size >> multiplier;
+    ss >> name >> size;
+    if (ss.peek() == 'x') {
+        ss.ignore();
+        ss >> quantity;
+    }
+    ss >> multiplier;
+
+    std::map<Ingredients, int> requiredIngredients{
+        {Ingredients::Dough, 1},
+        {Ingredients::Tomato, 1},
+        {Ingredients::Gruyere, 1}
+    };
 
     std::map<Ingredients, int> requiredIngredients;
     if (name == "Margarita") {
@@ -56,7 +71,14 @@ void Manager::preparePizza(const std::string& pizza) {
         }
     }
 
-    // Si aucune cuisine n'est disponible, créer une nouvelle cuisine
     kitchens.emplace_back(numChefs);
     kitchens.back().preparePizza(name, size, multiplier);
+}
+
+void Manager::setNumChefs(int num) {
+    numChefs = num;
+}
+
+void Manager::setRestockTime(int time) {
+    restockTime = time;
 }
