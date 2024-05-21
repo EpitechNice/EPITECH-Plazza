@@ -11,7 +11,7 @@ void User::readCommand() {
     while (std::getline(std::cin, command)) {
         std::cout << "> ";
         try {
-        Manager::getInstance().receiveOrder(command);
+            Manager::getInstance().receiveOrder(command);
         } catch (const std::exception& e) {
                 std::cerr << "Invalid command. (TEST)" << e.what() << std::endl;
         }

@@ -19,6 +19,7 @@
 
     #include "includes.hpp"
     #include "../Parsing/Parsing.hpp"
+    #include "../Manager/Manager.hpp"
 
 namespace Plazza
 {
@@ -30,6 +31,9 @@ namespace Plazza
 
             void handleExec(int argc, char **argv);
             void usage(std::string filename);
+
+            void run(void);
+
     };
 }
 

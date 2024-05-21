@@ -31,6 +31,7 @@
     #include <ostream>
     #include <sstream>
     #include <string>
+    #include <sys/stat.h>
     #include <unordered_map>
     #include <unordered_set>
     #include <unistd.h>

@@ -71,3 +71,29 @@ std::size_t Parsing::getRefillTime() const
 {
     return this->_refillTime;
 }
+
+std::vector<std::string> str_to_word_array_on_steroid(std::string str, std::string delims)
+{
+    std::vector<std::string> output;
+    
+    std::size_t pos_start = 0, pos_end = 0, min = 0;
+    std::string token;
+
+    while (min != std::string::npos) {
+        min = std::string::npos;
+        for (std::size_t i = 0; i < delims.size(); i++) {
+            pos_end = str.find(delims[i], pos_start);
+            if (pos_end != std::string::npos && (pos_end < min || min == std::string::npos))
+                min = pos_end;
+        }
+        if (min == std::string::npos) continue;
+        token = str.substr(pos_start, min - pos_start);
+        pos_start = min + 1;
+        if (token.size())
+            output.push_back(token);
+    }
+
+    if (str.substr(pos_start).size())
+        output.push_back(str.substr(pos_start));
+    return output;
+}

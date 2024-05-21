@@ -9,7 +9,7 @@
 class Manager {
 private:
     std::mutex mtx;
-    std::vector<Kitchen> kitchens;
+    std::vector<Kitchen *> kitchens;
     int numChefs = 3;
     int restockTime;
     Manager() {}

@@ -27,14 +27,15 @@ namespace Plazza
     class Protocol: Flint::Inspection<Protocol>
     {
         private:
-            std::fstream file;
-            std::size_t count;
+            int _file;
+            std::string _name;
         public:
             Protocol();
             Protocol(const std::string& filename);
-            Protocol(int filedesc);
-            Protocol& operator=(const Protocol& other);
             ~Protocol();
+
+            std::string read(std::size_t size);
+            void write(const std::string& data);
 
             std::string str() const;
     };

@@ -35,10 +35,26 @@ namespace Plazza
         std::cout << "Multiplier time: " << Parsing::get().getMultiplierTime() << std::endl;
         std::cout << "Nb cooks: " << Parsing::get().getNbCooks() << std::endl;
         std::cout << "Refill time: " << Parsing::get().getRefillTime() << std::endl;
+        this->run();
     }
 
     void Core::usage(std::string filename)
     {
         std::cout << "Usage: " + filename + " [-h|--help] [MultipierTime] [NbCooks] [RefillTime]" << std::endl;
+    }
+
+    void Core::run(void)
+    {
+        std::string input;
+
+        while (std::getline(std::cin, input)) {
+            std::cout << "> ";
+            try {
+                std::cout << "DEBUG" << input << std::endl;
+                Manager::getInstance().receiveOrder(input);
+            } catch (const std::exception& e) {
+                std::cerr << "Invalid command. (TEST)" << e.what() << std::endl;
+            }
+        }
     }
 }

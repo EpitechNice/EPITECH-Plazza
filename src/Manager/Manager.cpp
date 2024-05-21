@@ -22,9 +22,9 @@ void Manager::receiveOrder(const std::string& order) {
 void Manager::manageKitchens() {
     const auto waitTime = std::chrono::seconds(10);
     for (auto& kitchen : kitchens) {
-        if (kitchen.checkCooksStatus() == 1 && kitchen.checkIngredients() == 1) {
+        if (kitchen->checkCooksStatus() == 1 && kitchen->checkIngredients() == 1) {
             std::this_thread::sleep_for(waitTime);
-            kitchen.restockIngredients();
+            kitchen->restockIngredients();
         }
     }
 }
@@ -60,13 +60,13 @@ void Manager::preparePizza(const std::string& pizza) {
     }
 //TODO : IPC
     for (auto& kitchen : kitchens) {
-        if (kitchen.isAvailable(requiredIngredients)) {
-            kitchen.preparePizza(name, size, multiplier);
+        if (kitchen->isAvailable(requiredIngredients)) {
+            kitchen->preparePizza(name, size, multiplier);
             return;
         }
     }
-
-    kitchens.back().preparePizza(name, size, multiplier);
+    kitchens.emplace_back(new Kitchen(numChefs));
+    kitchens.back()->preparePizza(name, size, multiplier);
 }
 
 void Manager::setNumChefs(int num) {

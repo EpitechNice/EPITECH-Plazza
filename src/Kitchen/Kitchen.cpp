@@ -42,9 +42,7 @@ void Kitchen::preparePizza(const std::string& name, const std::string& size, int
     std::cout << "Préparation de la pizza " << name << " de taille " << size << "..." << std::endl;
     int cookingTime = calculateCookingTime(name, size, multiplier);
     std::vector<std::thread> threads;
-//TODO : segfault ?
     for (auto& chef : chefs) {
-            std::cout << "test " << std::endl;
         if (chef.isAvailable()) {
             chef.takeOrder();
             threads.push_back(std::thread(&Chef::cook, &chef, name, size, cookingTime));
