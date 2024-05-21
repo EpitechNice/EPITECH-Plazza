@@ -22,18 +22,22 @@
 
 #include "includes.hpp"
 
-class Protocol
+namespace Plazza
 {
-    private:
-    protected:
-    public:
-        Protocol();
-        Protocol(/* args */);
-        Protocol(const Protocol& other);
-        Protocol& operator=(const Protocol& other);
-        ~Protocol() = default;
+    class Protocol: Flint::Inspection<Protocol>
+    {
+        private:
+            std::fstream file;
+            std::size_t count;
+        public:
+            Protocol();
+            Protocol(const std::string& filename);
+            Protocol(int filedesc);
+            Protocol& operator=(const Protocol& other);
+            ~Protocol();
 
-        void display(std::ostream& = std::cout);
-};
+            std::string str() const;
+    };
+}
 
 #endif

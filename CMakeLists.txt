@@ -24,7 +24,12 @@ set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
 add_executable(plazza
     src/Core/Core.cpp
     src/Parsing/Parsing.cpp
-    src/Main.cpp
+    src/Chef/Chef.cpp
+    src/Kitchen/Kitchen.cpp
+    src/Manager/Manager.cpp
+    src/Serveur/Serveur.cpp
+    src/User/User.cpp
+    src/main.cpp
 )
 
 target_link_libraries(plazza PUBLIC flint)

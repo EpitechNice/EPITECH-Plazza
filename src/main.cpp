@@ -1,7 +1,9 @@
-#include "User.hpp"
-#include "Manager.hpp"
+#include "./User/User.hpp"
+#include "./Manager/Manager.hpp"
 #include <iostream>
 #include <cstdlib>
+#include "includes.hpp"
+#include "Core/Core.hpp"
 
 int main(int argc, char* argv[]) {
     if (argc != 4) {

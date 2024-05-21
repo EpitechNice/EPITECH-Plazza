@@ -26,7 +26,7 @@ Kitchen::~Kitchen() {
     }
 }
 
-bool Kitchen::isAvailable(const std::string& size, const std::map<Ingredients, int>& requiredIngredients) {
+bool Kitchen::isAvailable(const std::map<Ingredients, int>& requiredIngredients) {
     std::lock_guard<std::mutex> lock(mtx);
     bool enoughIngredients = true;
     for (const auto& ingredient : requiredIngredients) {
@@ -42,9 +42,11 @@ void Kitchen::preparePizza(const std::string& name, const std::string& size, int
     std::cout << "Préparation de la pizza " << name << " de taille " << size << "..." << std::endl;
     int cookingTime = calculateCookingTime(name, size, multiplier);
     std::vector<std::thread> threads;
+//TODO : segfault ?
     for (auto& chef : chefs) {
+            std::cout << "test " << std::endl;
         if (chef.isAvailable()) {
-            chef.takeOrder(name, size, cookingTime);
+            chef.takeOrder();
             threads.push_back(std::thread(&Chef::cook, &chef, name, size, cookingTime));
         }
     }
@@ -72,7 +74,9 @@ int Kitchen::checkIngredients() {
     return 0; // Tous les ingrédients sont disponibles
 }
 
+//TODO: size pizza (S, M, L, XL, XXL)
 int Kitchen::calculateCookingTime(const std::string& name, const std::string& size, int multiplier) {
+    (void)size;
     int baseTime;
     if (name == "Margarita") {
         baseTime = 1;

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
-#include "Serveur.hpp"
+#include "../Serveur/Serveur.hpp"
 
 class Chef {
 private:
@@ -16,7 +16,7 @@ public:
     ~Chef();
 
     void cook(const std::string& name, const std::string& size, int cookingTime);
-    void takeOrder(const std::string& name, const std::string& size, int cookingTime);
+    void takeOrder();
     bool isAvailable() const;
     int getId() const;
     int getNumPizzasInProgress() const;

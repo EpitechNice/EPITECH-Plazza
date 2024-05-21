@@ -68,6 +68,15 @@ namespace Flint::Exceptions
                 Exception(what, infos)
             {}
     };
+
+    class FIFOCreationError: public Flint::Exceptions::Exception
+    {
+        public:
+            FIFOCreationError(std::string what = "Error while building FIFO.",
+                              std::pair<std::pair<std::string, std::size_t>, std::string> infos = {{"", 0}, ""}):
+                Exception(what, infos)
+            {}
+    };
 }
 
 #endif

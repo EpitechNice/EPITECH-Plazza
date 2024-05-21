@@ -5,7 +5,7 @@
 #include <mutex>
 #include <map>
 #include <thread>
-#include "Chef.hpp"
+#include "../Chef/Chef.hpp"
 
 enum class PizzaType {
     Regina = 1,
@@ -47,7 +47,7 @@ private:
 public:
     Kitchen(int numChefs);
     ~Kitchen();
-    bool isAvailable(const std::string& size, const std::map<Ingredients, int>& requiredIngredients);
+    bool isAvailable(const std::map<Ingredients, int>& requiredIngredients);
     void preparePizza(const std::string& name, const std::string& size, int multiplier);
     int checkCooksStatus();
     int checkIngredients();

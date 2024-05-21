@@ -12,7 +12,7 @@ void Chef::cook(const std::string& name, const std::string& size, int cookingTim
     numPizzasInProgress--;
 }
 
-void Chef::takeOrder(const std::string& name, const std::string& size, int cookingTime) {
+void Chef::takeOrder() {
     numPizzasInProgress++;
 }
 

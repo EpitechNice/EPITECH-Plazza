@@ -22,6 +22,7 @@
     #include <cmath>
     #include <cxxabi.h>
     #include <exception>
+    #include <ext/stdio_filebuf.h>
     #include <filesystem>
     #include <initializer_list>
     #include <iostream>
@@ -32,6 +33,7 @@
     #include <string>
     #include <unordered_map>
     #include <unordered_set>
+    #include <unistd.h>
     #include <utility>
     #include <vector>
 

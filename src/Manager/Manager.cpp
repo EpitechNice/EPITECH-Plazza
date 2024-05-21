@@ -2,7 +2,7 @@
 #include <chrono>
 #include <thread>
 #include "Manager.hpp"
-#include "Serveur.hpp"
+#include "../Serveur/Serveur.hpp"
 
 Manager Manager::instance;
 
@@ -44,13 +44,8 @@ void Manager::preparePizza(const std::string& pizza) {
     }
     ss >> multiplier;
 
-    std::map<Ingredients, int> requiredIngredients{
-        {Ingredients::Dough, 1},
-        {Ingredients::Tomato, 1},
-        {Ingredients::Gruyere, 1}
-    };
-
     std::map<Ingredients, int> requiredIngredients;
+    requiredIngredients = {{Ingredients::Dough, 0}};
     if (name == "Margarita") {
         requiredIngredients = {{Ingredients::Dough, 1}, {Ingredients::Tomato, 1}, {Ingredients::Gruyere, 1}};
     } else if (name == "Regina") {
@@ -63,15 +58,14 @@ void Manager::preparePizza(const std::string& pizza) {
         std::cout << "Nom de pizza non reconnu" << std::endl;
         return;
     }
-
+//TODO : IPC
     for (auto& kitchen : kitchens) {
-        if (kitchen.isAvailable(size, requiredIngredients)) {
+        if (kitchen.isAvailable(requiredIngredients)) {
             kitchen.preparePizza(name, size, multiplier);
             return;
         }
     }
 
-    kitchens.emplace_back(numChefs);
     kitchens.back().preparePizza(name, size, multiplier);
 }
 
