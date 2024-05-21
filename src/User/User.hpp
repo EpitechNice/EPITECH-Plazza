@@ -1,4 +1,3 @@
-// user.hpp
 #ifndef USER_HPP
 #define USER_HPP
 
@@ -6,10 +5,7 @@
 
 class User {
 public:
-    void takeOrder(const std::string& order);
-
-private:
-    int nbrChefs = 0;
+    void readCommand();
 };
 
 #endif // USER_HPP

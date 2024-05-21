@@ -1,6 +1,11 @@
 #include "User.hpp"
 #include "Manager.hpp"
+#include <iostream>
+#include <sstream>
 
-void User::takeOrder(const std::string& order) {
-    Manager::getInstance().receiveOrder(order, nbrChefs);
+void User::readCommand() {
+    std::string command;
+    while (std::getline(std::cin, command)) {
+        Manager::getInstance().receiveOrder(command);
+    }
 }
