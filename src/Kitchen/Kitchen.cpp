@@ -1,9 +1,9 @@
-// kitchen.cpp
 #include "Kitchen.hpp"
 #include <iostream>
 #include <thread>
+#include <chrono>
 
-Kitchen::Kitchen(int numChefs) {
+Kitchen::Kitchen(int numChefs) : running(true) {
     ingredientsStock[Ingredients::Dough] = 5;
     ingredientsStock[Ingredients::Tomato] = 5;
     ingredientsStock[Ingredients::Gruyere] = 5;
@@ -16,6 +16,14 @@ Kitchen::Kitchen(int numChefs) {
     for (int i = 0; i < numChefs; ++i) {
         chefs.emplace_back(i);
     }
+    startMonitoring(); // Démarrer la surveillance de l'activité
+}
+
+Kitchen::~Kitchen() {
+    stopMonitoring();
+    if (monitorThread.joinable()) {
+        monitorThread.join();
+    }
 }
 
 bool Kitchen::isAvailable(const std::string& size, const std::map<Ingredients, int>& requiredIngredients) {
@@ -27,7 +35,7 @@ bool Kitchen::isAvailable(const std::string& size, const std::map<Ingredients, i
             break;
         }
     }
-    return enoughIngredients && !chefs.empty();
+    return enoughIngredients;
 }
 
 void Kitchen::preparePizza(const std::string& name, const std::string& size, int multiplier) {
@@ -37,7 +45,7 @@ void Kitchen::preparePizza(const std::string& name, const std::string& size, int
     for (auto& chef : chefs) {
         if (chef.isAvailable()) {
             chef.takeOrder(name, size, cookingTime);
-            threads.push_back(std::thread(&Chef::cook, chef, name, size, cookingTime));
+            threads.push_back(std::thread(&Chef::cook, &chef, name, size, cookingTime));
         }
     }
     for (auto& thread : threads) {
@@ -47,7 +55,6 @@ void Kitchen::preparePizza(const std::string& name, const std::string& size, int
 }
 
 int Kitchen::checkCooksStatus() {
-    //verifier si les cuisteaux cuisine
     for (auto& chef : chefs) {
         if (chef.getNumPizzasInProgress() > 0) {
             return 0;
@@ -57,13 +64,12 @@ int Kitchen::checkCooksStatus() {
 }
 
 int Kitchen::checkIngredients() {
-    if (ingredientsStock[Ingredients::Dough] < 1)
-        return 1;
-    for (auto &ingredients : ingredientsStock ) {
-        if (ingredients.second < 1)
-            return 1;
+    for (const auto& ingredient : ingredientsStock) {
+        if (ingredient.second < 1) {
+            return 1; // Si un ingrédient est épuisé
+        }
     }
-    return 0;
+    return 0; // Tous les ingrédients sont disponibles
 }
 
 int Kitchen::calculateCookingTime(const std::string& name, const std::string& size, int multiplier) {
@@ -78,4 +84,43 @@ int Kitchen::calculateCookingTime(const std::string& name, const std::string& si
         baseTime = 0;
     }
     return baseTime * multiplier;
+}
+
+void Kitchen::restockIngredients() {
+    std::lock_guard<std::mutex> lock(mtx);
+    ingredientsStock[Ingredients::Dough] = 5;
+    ingredientsStock[Ingredients::Tomato] = 5;
+    ingredientsStock[Ingredients::Gruyere] = 5;
+    ingredientsStock[Ingredients::Ham] = 5;
+    ingredientsStock[Ingredients::Mushrooms] = 5;
+    ingredientsStock[Ingredients::Eggplant] = 5;
+    ingredientsStock[Ingredients::GoatCheese] = 5;
+    ingredientsStock[Ingredients::ChiefLove] = 5;
+    ingredientsStock[Ingredients::Steak] = 5;
+}
+
+void Kitchen::monitorActivity() {
+    while (running) {
+        std::this_thread::sleep_for(std::chrono::seconds(3));
+        if (checkCooksStatus() == 1 && checkIngredients() == 1) {
+            std::this_thread::sleep_for(std::chrono::seconds(3));
+            if (checkCooksStatus() == 1 && checkIngredients() == 1) {
+                std::lock_guard<std::mutex> lock(mtx);
+                restockIngredients();
+                std::cout << "La cuisine est fermée car aucune pizza n'était en préparation et les ingrédients étaient épuisés." << std::endl;
+                running = false;
+            }
+        }
+    }
+}
+
+void Kitchen::startMonitoring() {
+    monitorThread = std::thread(&Kitchen::monitorActivity, this);
+}
+
+void Kitchen::stopMonitoring() {
+    running = false;
+    if (monitorThread.joinable()) {
+        monitorThread.join();
+    }
 }
