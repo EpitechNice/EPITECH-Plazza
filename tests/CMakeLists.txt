@@ -34,6 +34,10 @@ add_subdirectory(
 
 add_executable(plazza-test
     ../src/Core/Core.cpp
+    ../src/Manager/Manager.cpp
+    ../src/Kitchen/Kitchen.cpp
+    ../src/Chef/Chef.cpp
+    ../src/Serveur/Serveur.cpp
     ../src/Parsing/Parsing.cpp
     tests.cpp
 )
