@@ -11,3 +11,8 @@ Serveur& Serveur::getInstance() {
 void Serveur::notifyReadyPizza(const std::string& pizza) {
     std::cout << "Le serveur annonce : Votre pizza " << pizza << " est prête à être dégustée !" << std::endl;
 }
+
+std::string Serveur::str() const
+{
+    return make_str("No attributes");
+}

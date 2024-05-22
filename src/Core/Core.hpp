@@ -23,7 +23,7 @@
 
 namespace Plazza
 {
-    class Core
+    class Core: Flint::Inspection<Core>
     {
         public:
             Core(int argc, char **argv);
@@ -34,6 +34,7 @@ namespace Plazza
 
             void run(void);
 
+            std::string str() const;
     };
 }
 

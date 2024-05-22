@@ -31,3 +31,8 @@ int Chef::getNumPizzasInProgress() const {
 void Chef::setNumPizzasInProgress(int num) {
     numPizzasInProgress = num;
 }
+
+std::string Chef::str() const
+{
+    return make_str(display_attr(id) << ", " << display_attr(numPizzasInProgress));
+}

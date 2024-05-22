@@ -5,6 +5,9 @@
 
 //TODO: do an exception in Flink
 
+User::User()
+{}
+
 void User::readCommand() {
     std::string command;
 
@@ -16,4 +19,9 @@ void User::readCommand() {
                 std::cerr << "Invalid command. (TEST)" << e.what() << std::endl;
         }
     }
+}
+
+std::string User::str() const
+{
+    return make_str("No attributes");
 }

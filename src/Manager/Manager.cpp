@@ -76,3 +76,8 @@ void Manager::setNumChefs(int num) {
 void Manager::setRestockTime(int time) {
     restockTime = time;
 }
+
+std::string Manager::str() const
+{
+    return make_str(display_attr(numChefs) << ", " << display_attr(restockTime));
+}

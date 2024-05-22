@@ -6,6 +6,7 @@
 #include <map>
 #include <thread>
 #include "../Chef/Chef.hpp"
+#include "includes.hpp"
 
 enum class PizzaType {
     Regina = 1,
@@ -34,27 +35,30 @@ enum class Ingredients {
     Steak = 256
 };
 
-class Kitchen {
-private:
-    std::mutex mtx;
-    std::map<Ingredients, int> ingredientsStock;
-    std::vector<Chef> chefs;
-    bool running;
-    std::thread monitorThread;
+class Kitchen: Flint::Inspection<Kitchen>
+{
+    private:
+        std::mutex mtx;
+        std::map<Ingredients, int> ingredientsStock;
+        std::vector<Chef> chefs;
+        bool running;
+        std::thread monitorThread;
 
-    void monitorActivity();
+        void monitorActivity();
 
-public:
-    Kitchen(int numChefs);
-    ~Kitchen();
-    bool isAvailable(const std::map<Ingredients, int>& requiredIngredients);
-    void preparePizza(const std::string& name, const std::string& size, int multiplier);
-    int checkCooksStatus();
-    int checkIngredients();
-    int calculateCookingTime(const std::string& name, const std::string& size, int multiplier);
-    void restockIngredients();
-    void startMonitoring(); // Démarrer la surveillance
-    void stopMonitoring(); // Arrêter la surveillance
+    public:
+        Kitchen(int numChefs);
+        ~Kitchen();
+        bool isAvailable(const std::map<Ingredients, int>& requiredIngredients);
+        void preparePizza(const std::string& name, const std::string& size, int multiplier);
+        int checkCooksStatus();
+        int checkIngredients();
+        int calculateCookingTime(const std::string& name, const std::string& size, int multiplier);
+        void restockIngredients();
+        void startMonitoring(); // Démarrer la surveillance
+        void stopMonitoring(); // Arrêter la surveillance
+
+        std::string str() const;
 };
 
 #endif // KITCHEN_HPP

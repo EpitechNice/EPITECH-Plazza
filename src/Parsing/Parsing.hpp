@@ -20,7 +20,7 @@
 
     #include "includes.hpp"
 
-class Parsing
+class Parsing: Flint::Inspection<Parsing>
 {
     private:
         double _multiplierTime = 0;
@@ -37,6 +37,8 @@ class Parsing
         double getMultiplierTime() const;
         int getNbCooks() const;
         std::size_t getRefillTime() const;
+
+        std::string str() const;
 };
 
 #endif

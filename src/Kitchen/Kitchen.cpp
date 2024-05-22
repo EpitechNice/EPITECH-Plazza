@@ -126,3 +126,8 @@ void Kitchen::stopMonitoring() {
         monitorThread.join();
     }
 }
+
+std::string Kitchen::str() const
+{
+    return make_str(display_attr(running) << ", ...");
+}

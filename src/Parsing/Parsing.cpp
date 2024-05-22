@@ -97,3 +97,8 @@ std::vector<std::string> str_to_word_array_on_steroid(std::string str, std::stri
         output.push_back(str.substr(pos_start));
     return output;
 }
+
+std::string Parsing::str() const
+{
+    return make_str(display_attr(_multiplierTime) << ", " << display_attr(_nbCooks) << ", " << display_attr(_refillTime));
+}

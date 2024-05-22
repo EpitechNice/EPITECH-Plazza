@@ -57,4 +57,9 @@ namespace Plazza
             }
         }
     }
+
+    std::string Core::str() const
+    {
+        return make_str("");
+    }
 }
