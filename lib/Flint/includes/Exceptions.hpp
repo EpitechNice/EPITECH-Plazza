@@ -77,6 +77,24 @@ namespace Flint::Exceptions
                 Exception(what, infos)
             {}
     };
+
+    class ReadError: public Flint::Exceptions::Exception
+    {
+        public:
+            ReadError(std::string what = "Error while reading from file.",
+                              std::pair<std::pair<std::string, std::size_t>, std::string> infos = {{"", 0}, ""}):
+                Exception(what, infos)
+            {}
+    };
+
+    class WriteError: public Flint::Exceptions::Exception
+    {
+        public:
+            WriteError(std::string what = "Error while wrtiting to file.",
+                              std::pair<std::pair<std::string, std::size_t>, std::string> infos = {{"", 0}, ""}):
+                Exception(what, infos)
+            {}
+    };
 }
 
 #endif

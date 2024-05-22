@@ -29,13 +29,21 @@ namespace Plazza
         private:
             int _file;
             std::string _name;
+            size_t _readSize;
+
         public:
             Protocol();
             Protocol(const std::string& filename);
             ~Protocol();
 
-            std::string read(std::size_t size);
-            void write(const std::string& data);
+            std::string Read(size_t size);
+            void Write(std::string data);
+
+            const std::string& getName() const;
+            size_t getReadSize() const;
+            void setReadSize(size_t size);
+
+            friend std::ostream& operator<<(std::ostream& os, Protocol& obj);
 
             std::string str() const;
     };
