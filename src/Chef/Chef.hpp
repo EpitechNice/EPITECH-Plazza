@@ -1,30 +1,50 @@
+/*                                                                                      *
+ * EPITECH PROJECT - Fri, May, 2024                                                     *
+ * Title           - EPITECH-Plazza                                                     *
+ * Description     -                                                                    *
+ *     Chef                                                                             *
+ *                                                                                      *
+ * -----------------------------------------------------------------------------------  *
+ *                                                                                      *
+ *       ▄▀▀█▄▄▄▄  ▄▀▀▄▀▀▀▄  ▄▀▀█▀▄    ▄▀▀▀█▀▀▄  ▄▀▀█▄▄▄▄  ▄▀▄▄▄▄   ▄▀▀▄ ▄▄             *
+ *      ▐  ▄▀   ▐ █   █   █ █   █  █  █    █  ▐ ▐  ▄▀   ▐ █ █    ▌ █  █   ▄▀            *
+ *        █▄▄▄▄▄  ▐  █▀▀▀▀  ▐   █  ▐  ▐   █       █▄▄▄▄▄  ▐ █      ▐  █▄▄▄█             *
+ *        █    ▌     █          █        █        █    ▌    █         █   █             *
+ *       ▄▀▄▄▄▄    ▄▀        ▄▀▀▀▀▀▄   ▄▀        ▄▀▄▄▄▄    ▄▀▄▄▄▄▀   ▄▀  ▄▀             *
+ *       █    ▐   █         █       █ █          █    ▐   █     ▐   █   █               *
+ *       ▐        ▐         ▐       ▐ ▐          ▐        ▐         ▐   ▐               *
+ *                                                                                      *
+ * -----------------------------------------------------------------------------------  */
+
 #ifndef CHEF_HPP
-#define CHEF_HPP
+    #define CHEF_HPP
 
-#include <iostream>
-#include <chrono>
-#include <thread>
-#include "../Serveur/Serveur.hpp"
-#include "includes.hpp"
+    #include "includes.hpp"
+    #include "../Serveur/Serveur.hpp"
 
-class Chef: Flint::Inspection<Chef>
+namespace Plazza
 {
-    private:
-        int id;
-        int numPizzasInProgress;
+    class Chef: Flint::Inspection<Chef>
+    {
+        private:
+            int _id;
+            int _numPizzasInProgress;
 
-    public:
-        Chef(int id);
-        ~Chef();
+        public:
+            Chef(int id);
+            ~Chef() = default;
 
-        void cook(const std::string& name, const std::string& size, int cookingTime);
-        void takeOrder();
-        bool isAvailable() const;
-        int getId() const;
-        int getNumPizzasInProgress() const;
-        void setNumPizzasInProgress(int num);
+            void cook(const std::string& name, const std::string& size, int cookingTime);
+            void takeOrder();
+            bool isAvailable() const;
 
-        std::string str() const;
-};
+            int getId() const;
+            int getNumPizzasInProgress() const;
+
+            void setNumPizzasInProgress(int num);
+
+            std::string str() const;
+    };
+}
 
 #endif // CHEF_HPP

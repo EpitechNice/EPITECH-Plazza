@@ -20,7 +20,7 @@
 #ifndef INCLUDED_PROTOCOL_HPP
     #define INCLUDED_PROTOCOL_HPP
 
-#include "includes.hpp"
+    #include "includes.hpp"
 
 namespace Plazza
 {

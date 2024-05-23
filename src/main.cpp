@@ -1,4 +1,4 @@
-#include "./User/User.hpp"
+#include "./Reception/Reception.hpp"
 #include "./Manager/Manager.hpp"
 #include <iostream>
 #include <cstdlib>
@@ -7,18 +7,18 @@
 
 int main(int argc, char* argv[]) {
     if (argc != 4) {
-        std::cerr << "Usage: " << argv[0] << " <multiplier> <numChefs> <restockTime>" << std::endl;
+        std::cerr << "Usage: " << argv[0] << " \n\t<multiplier> <numChefs> <restockTime>" << std::endl;
         return 1;
     }
 
     int numChefs = std::atoi(argv[2]);
     int restockTime = std::atoi(argv[3]);
 
-    Manager::getInstance().setNumChefs(numChefs);
-    Manager::getInstance().setRestockTime(restockTime);
+    Plazza::Manager::getInstance().setNumChefs(numChefs);
+    Plazza::Manager::getInstance().setRestockTime(restockTime);
 
-    User user;
-    user.readCommand();
+    Plazza::Reception reception;
+    reception.run();
 
     return 0;
 }

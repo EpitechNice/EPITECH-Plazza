@@ -1,21 +1,39 @@
-// server.hpp
+/*                                                                                      *
+ * EPITECH PROJECT - Fri, May, 2024                                                     *
+ * Title           - EPITECH-Plazza                                                     *
+ * Description     -                                                                    *
+ *     Serveur                                                                          *
+ *                                                                                      *
+ * -----------------------------------------------------------------------------------  *
+ *                                                                                      *
+ *       _|_|_|_|  _|_|_|    _|_|_|  _|_|_|_|_|  _|_|_|_|    _|_|_|  _|    _|           *
+ *       _|        _|    _|    _|        _|      _|        _|        _|    _|           *
+ *       _|_|_|    _|_|_|      _|        _|      _|_|_|    _|        _|_|_|_|           *
+ *       _|        _|          _|        _|      _|        _|        _|    _|           *
+ *       _|_|_|_|  _|        _|_|_|      _|      _|_|_|_|    _|_|_|  _|    _|           *
+ *                                                                                      *
+ * -----------------------------------------------------------------------------------  */
+
 #ifndef SERVEUR_HPP
-#define SERVEUR_HPP
+    #define SERVEUR_HPP
 
-#include <string>
-#include "includes.hpp"
+    #include "includes.hpp"
 
-class Serveur: Flint::Inspection<Serveur>
+namespace Plazza
 {
-    private:
-        Serveur() {}
-        static Serveur instance;
+    class Serveur: Flint::Inspection<Serveur>
+    {
+        private:
+            Serveur() {}
+            static Serveur instance;
 
-    public:
-        static Serveur& getInstance();
-        void notifyReadyPizza(const std::string& pizza);
+        public:
+            static Serveur& getInstance();
 
-        std::string str() const;
-};
+            void notifyReadyPizza(const std::string& pizza);
+
+            std::string str() const;
+    };
+}
 
 #endif // SERVEUR_HPP

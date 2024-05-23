@@ -1,18 +1,38 @@
-// server.cpp
+/*                                                                                      *
+ * EPITECH PROJECT - Fri, May, 2024                                                     *
+ * Title           - EPITECH-Plazza                                                     *
+ * Description     -                                                                    *
+ *     Serveur                                                                          *
+ *                                                                                      *
+ * -----------------------------------------------------------------------------------  *
+ *                                                                                      *
+ *             ███████╗██████╗ ██╗████████╗███████╗ ██████╗██╗  ██╗                     *
+ *             ██╔════╝██╔══██╗██║╚══██╔══╝██╔════╝██╔════╝██║  ██║                     *
+ *             █████╗  ██████╔╝██║   ██║   █████╗  ██║     ███████║                     *
+ *             ██╔══╝  ██╔═══╝ ██║   ██║   ██╔══╝  ██║     ██╔══██║                     *
+ *             ███████╗██║     ██║   ██║   ███████╗╚██████╗██║  ██║                     *
+ *             ╚══════╝╚═╝     ╚═╝   ╚═╝   ╚══════╝ ╚═════╝╚═╝  ╚═╝                     *
+ *                                                                                      *
+ * -----------------------------------------------------------------------------------  */
+
 #include "Serveur.hpp"
-#include <iostream>
 
-Serveur Serveur::instance;
-
-Serveur& Serveur::getInstance() {
-    return instance;
-}
-
-void Serveur::notifyReadyPizza(const std::string& pizza) {
-    std::cout << "Le serveur annonce : Votre pizza " << pizza << " est prête à être dégustée !" << std::endl;
-}
-
-std::string Serveur::str() const
+namespace Plazza
 {
-    return make_str("No attributes");
+    Serveur Serveur::instance;
+
+    Serveur& Serveur::getInstance()
+    {
+        return instance;
+    }
+
+    void Serveur::notifyReadyPizza(const std::string& pizza)
+    {
+        std::cout << "The waiter announces: Your pizza " << pizza << " is ready to be enjoyed!" << std::endl;
+    }
+
+    std::string Serveur::str() const
+    {
+        return make_str("No attributes");
+    }
 }
