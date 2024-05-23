@@ -41,18 +41,23 @@ bool Kitchen::isAvailable(const std::map<Ingredients, int>& requiredIngredients)
 void Kitchen::preparePizza(const std::string& name, const std::string& size, int multiplier) {
     std::cout << "Préparation de la pizza " << name << " de taille " << size << "..." << std::endl;
     int cookingTime = calculateCookingTime(name, size, multiplier);
-    std::vector<std::thread> threads;
+
+    bool pizzaAssigned = false;
+
     for (auto& chef : chefs) {
         if (chef.isAvailable()) {
             chef.takeOrder();
-            threads.push_back(std::thread(&Chef::cook, &chef, name, size, cookingTime));
+            std::thread(&Chef::cook, &chef, name, size, cookingTime).detach(); // Assigner la pizza à un seul chef et démarrer la cuisson dans un thread détaché
+            pizzaAssigned = true;
+            break;
         }
     }
-    for (auto& thread : threads) {
-        thread.join();
+
+    if (!pizzaAssigned) {
+        std::cout << "Tous les chefs sont occupés. La pizza " << name << " de taille " << size << " ne peut pas être préparée pour le moment." << std::endl;
     }
-    std::cout << "Pizza " << name << " de taille " << size << " prête à être dégustée !" << std::endl;
 }
+
 
 int Kitchen::checkCooksStatus() {
     for (auto& chef : chefs) {
@@ -124,6 +129,18 @@ void Kitchen::stopMonitoring() {
     running = false;
     if (monitorThread.joinable()) {
         monitorThread.join();
+    }
+}
+
+void Kitchen::displayStatus() {
+    std::cout << "Cooks status:\n";
+    for (const auto& chef : chefs) {
+        std::cout << "Chef " << chef.getId() << ": " << (chef.isAvailable() ? "Available" : "Busy") << "\n";
+    }
+
+    std::cout << "Ingredients stock:\n";
+    for (const auto& ingredient : ingredientsStock) {
+        std::cout << "Ingredient " << static_cast<int>(ingredient.first) << ": " << ingredient.second << "\n";
     }
 }
 

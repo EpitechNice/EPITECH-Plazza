@@ -11,6 +11,11 @@ Manager& Manager::getInstance() {
 }
 
 void Manager::receiveOrder(const std::string& order) {
+    if (order == "status") {
+        displayStatus();
+        return;
+    }
+    
     std::stringstream ss(order);
     std::string token;
     while (std::getline(ss, token, ';')) {
@@ -35,7 +40,6 @@ void Manager::preparePizza(const std::string& pizza) {
     int quantity = 1;
     int multiplier;
 
-
     std::stringstream ss(pizza);
     ss >> name >> size;
     if (ss.peek() == 'x') {
@@ -58,15 +62,22 @@ void Manager::preparePizza(const std::string& pizza) {
         std::cout << "Nom de pizza non reconnu" << std::endl;
         return;
     }
-//TODO : IPC
-    for (auto& kitchen : kitchens) {
-        if (kitchen->isAvailable(requiredIngredients)) {
-            kitchen->preparePizza(name, size, multiplier);
-            return;
+
+    for (int i = 0; i < quantity; ++i) {
+        bool pizzaPrepared = false;
+        for (auto& kitchen : kitchens) {
+            if (kitchen->isAvailable(requiredIngredients)) {
+                kitchen->preparePizza(name, size, multiplier);
+                pizzaPrepared = true;
+                break;
+            }
+        }
+
+        if (!pizzaPrepared) {
+            kitchens.emplace_back(new Kitchen(numChefs));
+            kitchens.back()->preparePizza(name, size, multiplier);
         }
     }
-    kitchens.emplace_back(new Kitchen(numChefs));
-    kitchens.back()->preparePizza(name, size, multiplier);
 }
 
 void Manager::setNumChefs(int num) {
@@ -75,6 +86,15 @@ void Manager::setNumChefs(int num) {
 
 void Manager::setRestockTime(int time) {
     restockTime = time;
+}
+
+void Manager::displayStatus() {
+    int kitchenNumber = 1;
+    for (const auto& kitchen : kitchens) {
+        std::cout << "Kitchen " << kitchenNumber << " Status:\n";
+        kitchen->displayStatus();
+        ++kitchenNumber;
+    }
 }
 
 std::string Manager::str() const

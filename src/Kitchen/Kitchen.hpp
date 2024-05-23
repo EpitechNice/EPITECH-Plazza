@@ -57,6 +57,7 @@ class Kitchen: Flint::Inspection<Kitchen>
         void restockIngredients();
         void startMonitoring(); // Démarrer la surveillance
         void stopMonitoring(); // Arrêter la surveillance
+        void displayStatus();
 
         std::string str() const;
 };
