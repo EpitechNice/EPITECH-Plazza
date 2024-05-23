@@ -29,7 +29,6 @@ add_executable(plazza
     src/Parsing/Parsing.cpp
     src/Protocol/Protocol.cpp
     src/Reception/Reception.cpp
-    src/Serveur/Serveur.cpp
     src/Main.cpp
 )
 

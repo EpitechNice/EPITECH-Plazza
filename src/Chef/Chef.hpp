@@ -20,7 +20,6 @@
     #define CHEF_HPP
 
     #include "includes.hpp"
-    #include "../Serveur/Serveur.hpp"
 
 namespace Plazza
 {

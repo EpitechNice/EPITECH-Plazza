@@ -166,12 +166,12 @@ namespace Plazza
 
     void Kitchen::displayStatus()
     {
-        std::cout << "Cooks status:\n";
+        std::cout << "Cooks status:" << std::endl;
         for (const auto& chef : this->_chefs) {
             std::cout << "Chef " << chef.getId() << ": " << (chef.isAvailable() ? "Available" : "Busy") << std::endl;
         }
 
-        std::cout << "Ingredients stock:\n";
+        std::cout << "Ingredients stock:" << std::endl;
         for (const auto& ingredient : this->_ingredientsStock) {
             std::cout << "Ingredient " << static_cast<int>(ingredient.first) << ": " << ingredient.second << std::endl;
         }

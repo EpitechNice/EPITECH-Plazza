@@ -21,12 +21,6 @@
 
 namespace Plazza
 {
-    Manager Manager::_instance;
-
-    Manager& Manager::getInstance()
-    {
-        return _instance;
-    }
 
 //TODO : Review
     void Manager::receiveOrder(const std::string& order)

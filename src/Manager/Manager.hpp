@@ -19,22 +19,19 @@
 
     #include "includes.hpp"
     #include "../Kitchen/Kitchen.hpp"
-    #include "../Serveur/Serveur.hpp"
-
 
 namespace Plazza
 {
     class Manager: Flint::Inspection<Manager> {
     private:
-        static Manager _instance;
         std::mutex _mutex;
         std::vector<std::shared_ptr<Kitchen>> _kitchenList;
         int _numChefs = 3;
         int _restockTime;
-        Manager() : _numChefs(0), _restockTime(0) {}
 
     public:
-        static Manager& getInstance();
+        Manager() : _numChefs(0), _restockTime(0) {}
+        ~Manager() = default;
 
         void receiveOrder(const std::string& order);
         void manageKitchens();

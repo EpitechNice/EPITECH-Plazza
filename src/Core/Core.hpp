@@ -32,7 +32,7 @@ namespace Plazza
             void handleExec(int argc, char **argv);
             void usage(std::string filename);
 
-            void run(void);
+            void loop(void);
 
             std::string str() const;
     };

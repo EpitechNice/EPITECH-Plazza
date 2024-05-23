@@ -35,7 +35,7 @@ namespace Plazza
         std::cout << "DEBUG | Multiplier time: " << Parsing::get().getMultiplierTime() << std::endl;
         std::cout << "DEBUG | Nb cooks: " << Parsing::get().getNbCooks() << std::endl;
         std::cout << "DEBUG | Refill time: " << Parsing::get().getRefillTime() << std::endl;
-        this->run();
+        this->loop();
     }
 
     void Core::usage(std::string filename)
@@ -43,7 +43,8 @@ namespace Plazza
         std::cout << "USAGE\n\t" + filename + " [MultipierTime] [NbCooks] [RefillTime]" << std::endl;
     }
 
-    void Core::run(void)
+//TODO : Manager
+    void Core::loop(void)
     {
         std::string input;
 
@@ -51,7 +52,7 @@ namespace Plazza
             std::cout << "> ";
             try {
                 std::cout << "DEBUG " << input << std::endl;
-                Manager::getInstance().receiveOrder(input);
+                // Manager::getInstance().receiveOrder(input);
             } catch (const std::exception& e) {
                 std::cerr << "Invalid command. (TEST)" << e.what() << std::endl;
             }
