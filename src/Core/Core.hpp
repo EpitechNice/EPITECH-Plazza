@@ -19,7 +19,7 @@
 
     #include "includes.hpp"
     #include "../Parsing/Parsing.hpp"
-    #include "../Manager/Manager.hpp"
+    #include "../Reception/Reception.hpp"
 
 namespace Plazza
 {
@@ -32,7 +32,7 @@ namespace Plazza
             void handleExec(int argc, char **argv);
             void usage(std::string filename);
 
-            void loop(void);
+            void loop(double multiplierCooking, int numChefs, int restockTime);
 
             std::string str() const;
     };

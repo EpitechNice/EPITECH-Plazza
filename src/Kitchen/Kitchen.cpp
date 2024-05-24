@@ -19,9 +19,11 @@
 
 namespace Plazza
 {
-    Kitchen::Kitchen(int numChefs)
+    Kitchen::Kitchen(double multiplierCooking, int numChefs, int restockTime)
     {
         this->_running = true;
+        this->_multiplierCooking = multiplierCooking;
+        this->_restockTime = restockTime;
         this->_ingredientsStock[Ingredients::Dough] = 5;
         this->_ingredientsStock[Ingredients::Tomato] = 5;
         this->_ingredientsStock[Ingredients::Gruyere] = 5;
@@ -62,7 +64,7 @@ namespace Plazza
 
     void Kitchen::preparePizza(const std::string& name, const std::string& size, int multiplier)
     {
-        std::cout << "Preparing pizza " << name << " of size " << size << "..." << std::endl;
+        std::cout << "\tPreparing pizza " << name << " of size " << size << "..." << std::endl;
         int cookingTime = calculateCookingTime(name, size, multiplier);
         bool pizzaAssigned = false;
 
@@ -76,7 +78,7 @@ namespace Plazza
             }
         }
         if (!pizzaAssigned) {
-            std::cout << "All the chefs are busy. The pizza " << name << " of size " << size << " cannot be prepared at the moment." << std::endl;
+            std::cout << "\tAll the chefs are busy. The pizza " << name << " of size " << size << " cannot be prepared at the moment." << std::endl;
         }
     }
 
@@ -145,7 +147,7 @@ namespace Plazza
                 if (checkCooksStatus() == 1 && checkIngredients() == 1) {
                     std::lock_guard<std::mutex> lock(this->_mutex);
                     restockIngredients();
-                    std::cout << "The kitchen is closed because no pizzas were being prepared and the ingredients had run out." << std::endl;
+                    std::cout << "\tThe kitchen is closed because no pizzas were being prepared and the ingredients had run out." << std::endl;
                     this->_running = false;
                 }
             }
@@ -164,22 +166,47 @@ namespace Plazza
         }
     }
 
+    std::string Kitchen::getIngredientName(Ingredients ingredient)
+    {
+        switch (ingredient) {
+            case Ingredients::Dough:
+                return "Dough";
+            case Ingredients::Tomato:
+                return "Tomato";
+            case Ingredients::Gruyere:
+                return "Gruyere";
+            case Ingredients::Ham:
+                return "Ham";
+            case Ingredients::Mushrooms:
+                return "Mushrooms";
+            case Ingredients::Eggplant:
+                return "Eggplant";
+            case Ingredients::GoatCheese:
+                return "GoatCheese";
+            case Ingredients::ChiefLove:
+                return "ChiefLove";
+            case Ingredients::Steak:
+                return "Steak";
+            default: return "Unknown ingredient";
+        }
+    }
+
     void Kitchen::displayStatus()
     {
-        std::cout << "Cooks status:" << std::endl;
+        std::cout << "\tCooks status:" << std::endl;
         for (const auto& chef : this->_chefs) {
-            std::cout << "Chef " << chef.getId() << ": " << (chef.isAvailable() ? "Available" : "Busy") << std::endl;
+            std::cout << "\t\tChef " << chef.getId() + 1 << ": " << (chef.isAvailable() ? "Available" : "Busy") << std::endl;
         }
 
-        std::cout << "Ingredients stock:" << std::endl;
+        std::cout << "\tIngredients stock:" << std::endl;
         for (const auto& ingredient : this->_ingredientsStock) {
-            std::cout << "Ingredient " << static_cast<int>(ingredient.first) << ": " << ingredient.second << std::endl;
+            std::cout << "\t\t" << getIngredientName(ingredient.first) << ": " << ingredient.second << std::endl;
         }
     }
 
     std::string Kitchen::str() const
     {
-        return make_str(display_attr(_running) << ", ...");
+        return make_str(display_attr(_running) << ", " << display_attr(_multiplierCooking) << ", " << display_attr(_restockTime));
 
     }
 }

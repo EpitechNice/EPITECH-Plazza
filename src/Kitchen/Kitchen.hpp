@@ -53,25 +53,35 @@ namespace Plazza
     class Kitchen: Flint::Inspection<Kitchen>
     {
         private:
-            bool _running;
-            std::map<Ingredients, int> _ingredientsStock;
-            std::vector<Chef> _chefs;
             std::mutex _mutex;
             std::thread _monitorThread;
+
+            double _multiplierCooking;
+            std::vector<Chef> _chefs;
+            int _restockTime;
+
+            std::map<Ingredients, int> _ingredientsStock;
+
+            bool _running;
 
             void monitorActivity();
 
         public:
-            Kitchen(int numChefs);
+            Kitchen(double multiplierCooking, int numChefs, int restockTime);
             ~Kitchen();
+
             bool isAvailable(const std::map<Ingredients, int>& requiredIngredients);
             void preparePizza(const std::string& name, const std::string& size, int multiplier);
             int checkCooksStatus();
             int checkIngredients();
             int calculateCookingTime(const std::string& name, const std::string& size, int multiplier);
             void restockIngredients();
+
             void startMonitoring(); // Démarrer la surveillance
             void stopMonitoring(); // Arrêter la surveillance
+
+            std::string getIngredientName(Ingredients ingredient);
+
             void displayStatus();
 
             std::string str() const;

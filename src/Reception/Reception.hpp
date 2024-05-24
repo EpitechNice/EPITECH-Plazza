@@ -45,8 +45,9 @@ namespace Plazza
     {
         private:
             std::shared_ptr<Manager> _manager;
+
         public:
-            Reception();
+            Reception(double multiplierCooking, int numChefs, int restockTime);
             ~Reception() = default;
 
             void run();

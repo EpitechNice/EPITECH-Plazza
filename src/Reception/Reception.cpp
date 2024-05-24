@@ -7,16 +7,19 @@
 
 namespace Plazza
 {
-    Reception::Reception()
+    Reception::Reception(double multiplierCooking, int numChefs, int restockTime)
     {
-        this->_manager = std::make_shared<Manager>();
+        this->_manager = std::make_shared<Manager>(multiplierCooking, numChefs, restockTime);
+        std::cout << "DEBUG | Manager : " << this->_manager->str() << std::endl;
     }
 
     void Reception::run() {
         std::string input;
 
-        while (std::getline(std::cin, input)) {
+        while (true) {
             std::cout << "> ";
+            if (!std::getline(std::cin, input))
+                break;
             try {
                 this->_manager->receiveOrder(input);
             } catch (const std::exception& e) {

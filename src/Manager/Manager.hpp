@@ -26,11 +26,12 @@ namespace Plazza
     private:
         std::mutex _mutex;
         std::vector<std::shared_ptr<Kitchen>> _kitchenList;
-        int _numChefs = 3;
+        double _multiplierCooking;
+        int _numChefs;
         int _restockTime;
 
     public:
-        Manager() : _numChefs(0), _restockTime(0) {}
+        Manager(double multiplierCooking, int numChefs, int restockTime);
         ~Manager() = default;
 
         void receiveOrder(const std::string& order);

@@ -21,7 +21,12 @@
 
 namespace Plazza
 {
-
+    Manager::Manager(double multiplierCooking, int numChefs, int restockTime)
+    {
+        this->_multiplierCooking = multiplierCooking;
+        this->_numChefs = numChefs;
+        this->_restockTime = restockTime;
+    }
 //TODO : Review
     void Manager::receiveOrder(const std::string& order)
     {
@@ -76,10 +81,10 @@ namespace Plazza
         } else if (name == "Fantasia") {
             requiredIngredients = {{Ingredients::Dough, 1}, {Ingredients::Tomato, 1}, {Ingredients::Gruyere, 1}, {Ingredients::Eggplant, 1}, {Ingredients::GoatCheese, 1}, {Ingredients::ChiefLove, 1}};
         } else {
-            std::cout << "Unknown pizza type." << std::endl;
+            std::cout << "\tReception Manager : Unknown pizza type." << std::endl;
             return;
         }
-        for (int i = 0; i < quantity; ++i) {
+        for (int i = 0; i < quantity; i++) {
             for (auto& kitchen : this->_kitchenList) {
                 if (kitchen->isAvailable(requiredIngredients)) {
                     kitchen->preparePizza(name, size, multiplier);
@@ -88,7 +93,7 @@ namespace Plazza
                 }
             }
             if (!pizzaPrepared) {
-                this->_kitchenList.emplace_back(std::make_shared<Kitchen>(this->_numChefs));
+                this->_kitchenList.emplace_back(std::make_shared<Kitchen>(this->_multiplierCooking, this->_numChefs, this->_restockTime));
                 this->_kitchenList.back()->preparePizza(name, size, multiplier);
             }
         }
@@ -107,9 +112,12 @@ namespace Plazza
     void Manager::displayStatus()
     {
         int kitchenNumber = 1;
+        if (this->_kitchenList.empty()) {
+            std::cout << "\tKitchens status:\n\t\tNo open kitchen" <<std::endl;
+        }
 
         for (const auto& kitchen : this->_kitchenList) {
-            std::cout << "Kitchen " << kitchenNumber << " Status:" << std::endl;
+            std::cout << "\tKitchens " << kitchenNumber << " status:" << std::endl;
             kitchen->displayStatus();
             kitchenNumber++;
         }
@@ -117,6 +125,6 @@ namespace Plazza
 
     std::string Manager::str() const
     {
-        return make_str(display_attr(_numChefs) << ", " << display_attr(_restockTime));
+        return make_str(display_attr(_multiplierCooking) << ", " << display_attr(_numChefs) << ", " << display_attr(_restockTime));
     }
 }
