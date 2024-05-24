@@ -80,7 +80,7 @@ namespace Plazza
     void Manager::preparePizza(const std::string& pizza)
     {
         std::string token = pizza;
-        std::regex first_token("[a-zA-Z]+");
+        std::regex first_token("[a-z]+");
         std::regex second_token("^(S|M|L|XL|XXL)$");
         std::regex third_token("x[1-9][0-9]*");
         std::vector<std::string> tokens = this->strToWordArrayOnSteroid(token, " \t");
@@ -103,33 +103,69 @@ namespace Plazza
         std::size_t quantity = std::stoul(tokens[2].substr(1));
         size_t kitchenCount = this->_kitchenList.size();
 
-        std::size_t pizzasPerKitchen = quantity / kitchenCount;
-        std::size_t remainingPizzas = quantity % kitchenCount;
+        // std::size_t pizzasPerKitchen = 0;
+        // std::size_t remainingPizzas  = quantity;
 
-        std::map<Ingredients, int> requiredIngredients = {{Ingredients::Dough, 0}};
-        if (tokens[0] == "Margarita") {
+        if (!kitchenCount) {
+            auto firstKitchen = std::make_shared<Kitchen>(this->_multiplierCooking, this->_numChefs, this->_restockTime);
+            this->_kitchenList.push_back(firstKitchen);
+            kitchenCount++;
+        }
+
+
+        std::size_t pizzasPerKitchen = quantity / kitchenCount;
+        std::size_t remainingPizzas  = quantity % kitchenCount;
+
+        std::map<Ingredients, int> requiredIngredients = {};
+        if (tokens[0] == "margarita") {
             requiredIngredients = {{Ingredients::Dough, 1}, {Ingredients::Tomato, 1}, {Ingredients::Gruyere, 1}};
-        } else if (tokens[0] == "Regina") {
+        } else if (tokens[0] == "regina") {
             requiredIngredients = {{Ingredients::Dough, 1}, {Ingredients::Tomato, 1}, {Ingredients::Gruyere, 1}, {Ingredients::Ham, 1}, {Ingredients::Mushrooms, 1}};
-        } else if (tokens[0] == "Americana") {
+        } else if (tokens[0] == "americana") {
             requiredIngredients = {{Ingredients::Dough, 1}, {Ingredients::Tomato, 1}, {Ingredients::Gruyere, 1}, {Ingredients::Steak, 1}};
-        } else if (tokens[0] == "Fantasia") {
+        } else if (tokens[0] == "fantasia") {
             requiredIngredients = {{Ingredients::Dough, 1}, {Ingredients::Tomato, 1}, {Ingredients::Gruyere, 1}, {Ingredients::Eggplant, 1}, {Ingredients::GoatCheese, 1}, {Ingredients::ChiefLove, 1}};
         } else {
-            std::cout << "\tReception Manager : Unknown pizza type." << std::endl;
+            throw_exception(Flint::Exceptions::NotFoundError, "Requested pizza \"" + tokens[0] + "\" does not exists.");
             return;
         }
 
-        for (int i = 0; i < kitchenCount; ++i) {
+        for (std::size_t i = 0; i < kitchenCount; ++i) {
             auto& kitchen = this->_kitchenList[i];
-            for (int j = 0; j < pizzasPerKitchen; ++j) {
+            for (std::size_t j = 0; j < pizzasPerKitchen; ++j) {
                 if (kitchen->isAvailable(requiredIngredients)) {
                     kitchen->preparePizza(tokens[0], tokens[1]);
-                    quantity--;
+                    --quantity;
                 }
             }
         }
-                                // std::string name;
+
+        for (std::size_t i = 0; i < remainingPizzas; ++i) {
+            for (auto& kitchen : this->_kitchenList) {
+                if (kitchen->isAvailable(requiredIngredients)) {
+                    kitchen->preparePizza(tokens[0], tokens[1]);
+                    quantity--;
+                    break;
+                }
+            }
+        }
+
+        while (quantity > 0) {
+            auto newKitchen = std::make_shared<Kitchen>(this->_multiplierCooking, this->_numChefs, this->_restockTime);
+            this->_kitchenList.push_back(newKitchen);
+            bool kitchenAvailable = true;
+            while (kitchenAvailable && quantity > 0) {
+                if (newKitchen->isAvailable(requiredIngredients)) {
+                    newKitchen->preparePizza(tokens[0], tokens[1]);
+                    quantity--;
+                } else {
+                    kitchenAvailable = false;
+                }
+            }
+        }
+    }
+
+                                        // std::string name;
                                 // std::string size;
                                 // int quantity = 1;
                                 // int multiplier;
@@ -190,7 +226,6 @@ namespace Plazza
         //         }
         //     }
         // }
-    }
 
     void Manager::setNumChefs(int num)
     {
@@ -215,6 +250,8 @@ namespace Plazza
             kitchenNumber++;
         }
     }
+
+
 
     std::vector<std::string> Manager::strToWordArrayOnSteroid(const std::string& str, const std::string& delims) const
     {

@@ -52,7 +52,7 @@ namespace Plazza
     bool Kitchen::isAvailable(const std::map<Ingredients, int>& requiredIngredients)
     {
         std::lock_guard<std::mutex> lock(this->_mutex);
-        if (!this->_toClose)
+        if (this->_toClose)
             return false;
         bool enoughIngredients = true;
 
