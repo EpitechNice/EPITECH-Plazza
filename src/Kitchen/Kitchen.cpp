@@ -85,7 +85,6 @@ namespace Plazza
         }
     }
 
-
     int Kitchen::checkCooksStatus()
     {
         for (auto& chef : this->_chefs) {
@@ -141,27 +140,40 @@ namespace Plazza
         this->_ingredientsStock[Ingredients::Steak] += 1;
     }
 
-    void Kitchen::monitorActivity()
-    {
-        while (this->_running) {
-            std::this_thread::sleep_for(std::chrono::seconds(3));
+void Kitchen::monitorActivity()
+{
+    while (this->_running) {
+        std::this_thread::sleep_for(std::chrono::seconds(3));
+
+        if (checkCooksStatus() == 1) {
+            std::cout << "First check passed, pausing for 2 seconds..." << std::endl;
+
+            auto start = std::chrono::steady_clock::now();
+            std::this_thread::sleep_for(std::chrono::seconds(2));
+            auto end = std::chrono::steady_clock::now();
+            std::chrono::duration<double> elapsed_seconds = end - start;
+            std::cout << "Pause finished after " << elapsed_seconds.count() << " seconds, checking status again..." << std::endl;
+
             if (checkCooksStatus() == 1) {
-                std::this_thread::sleep_for(std::chrono::seconds(2));
-                if (checkCooksStatus() == 1) {
-                    std::lock_guard<std::mutex> lock(this->_mutex);
+                std::lock_guard<std::mutex> lock(this->_mutex);
+
+                if (!this->_toClose) {
                     std::cout << "\tThe kitchen is closed because no pizzas were being prepared and the ingredients had run out." << std::endl;
                     this->_toClose = true;
+                    this->_running = false;
                 }
             }
         }
     }
+}
 
     void Kitchen::startMonitoring()
     {
         this->_monitorThread = std::thread(&Kitchen::monitorActivity, this);
     }
 
-    void Kitchen::stopMonitoring() {
+    void Kitchen::stopMonitoring()
+    {
         this->_running = false;
         if (this->_monitorThread.joinable()) {
             this->_monitorThread.join();

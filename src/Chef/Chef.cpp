@@ -31,7 +31,7 @@ namespace Plazza
             std::this_thread::sleep_for(std::chrono::seconds(1));
         this->_isBaking = true;
         std::cout << "\tThe Cook " << this->_id << " is preparing a pizza " << name << " of size " << size << "..." << std::endl;
-        std::this_thread::sleep_for(std::chrono::seconds(cookingTime));
+        std::this_thread::sleep_for(std::chrono::milliseconds(cookingTime));
         std::cout << "\tPizza " << name << " of size " << size << " was prepared by Cook " << this->_id << std::endl;
         this->_numPizzasInProgress--;
         this->_isBaking = false;
