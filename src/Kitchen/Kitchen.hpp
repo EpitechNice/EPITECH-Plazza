@@ -17,37 +17,36 @@
 #ifndef KITCHEN_HPP
     #define KITCHEN_HPP
 
-
     #include "includes.hpp"
     #include "../Chef/Chef.hpp"
 
 namespace Plazza
 {
     enum class PizzaType {
-        Regina = 1,
-        Margarita = 2,
-        Americana = 4,
-        Fantasia = 8
+        Regina      = 1 << 0,
+        Margarita   = 1 << 1,
+        Americana   = 1 << 2,
+        Fantasia    = 1 << 3
     };
 
     enum class PizzaSize {
-        S = 1,
-        M = 2,
-        L = 4,
-        XL = 8,
-        XXL = 16
+        S           = 1 << 0,
+        M           = 1 << 1,
+        L           = 1 << 2,
+        XL          = 1 << 3,
+        XXL         = 1 << 4
     };
 
     enum class Ingredients {
-        Dough = 1,
-        Tomato = 2,
-        Gruyere = 4,
-        Ham = 8,
-        Mushrooms = 16,
-        Eggplant = 32,
-        GoatCheese = 64,
-        ChiefLove = 128,
-        Steak = 256
+        Dough       = 1 << 0,
+        Tomato      = 1 << 1,
+        Gruyere     = 1 << 2,
+        Ham         = 1 << 3,
+        Mushrooms   = 1 << 4,
+        Eggplant    = 1 << 5,
+        GoatCheese  = 1 << 6,
+        ChiefLove   = 1 << 7,
+        Steak       = 1 << 8
     };
 
     class Kitchen: Flint::Inspection<Kitchen>
@@ -63,6 +62,7 @@ namespace Plazza
             std::map<Ingredients, int> _ingredientsStock;
 
             bool _running;
+            bool _toClose;
 
             void monitorActivity();
 
@@ -71,16 +71,17 @@ namespace Plazza
             ~Kitchen();
 
             bool isAvailable(const std::map<Ingredients, int>& requiredIngredients);
-            void preparePizza(const std::string& name, const std::string& size, int multiplier);
+            void preparePizza(const std::string& name, const std::string& size);
             int checkCooksStatus();
             int checkIngredients();
-            int calculateCookingTime(const std::string& name, const std::string& size, int multiplier);
+            int calculateCookingTime(const std::string& name, const std::string& size);
             void restockIngredients();
 
             void startMonitoring(); // Démarrer la surveillance
             void stopMonitoring(); // Arrêter la surveillance
 
             std::string getIngredientName(Ingredients ingredient);
+            bool getClose();
 
             void displayStatus();
 

@@ -22,27 +22,30 @@
 
 namespace Plazza
 {
-    class Manager: Flint::Inspection<Manager> {
-    private:
-        std::mutex _mutex;
-        std::vector<std::shared_ptr<Kitchen>> _kitchenList;
-        double _multiplierCooking;
-        int _numChefs;
-        int _restockTime;
+    class Manager: Flint::Inspection<Manager>
+    {
+        private:
+            std::mutex _mutex;
+            std::vector<std::shared_ptr<Kitchen>> _kitchenList;
+            double _multiplierCooking;
+            int _numChefs;
+            int _restockTime;
 
-    public:
-        Manager(double multiplierCooking, int numChefs, int restockTime);
-        ~Manager() = default;
+        public:
+            Manager(double multiplierCooking, int numChefs, int restockTime);
+            ~Manager() = default;
 
-        void receiveOrder(const std::string& order);
-        void manageKitchens();
-        void preparePizza(const std::string& pizza);
-        void displayStatus();
+            bool receiveOrder(const std::string& order);
+            void manageKitchens();
+            void preparePizza(const std::string& pizza);
+            void displayStatus();
 
-        void setNumChefs(int num);
-        void setRestockTime(int time);
+            void setNumChefs(int num);
+            void setRestockTime(int time);
+            std::vector<std::string> strToWordArrayOnSteroid(const std::string& str, const std::string& delims) const;
+            void stringToLower(std::string& str) const;
 
-        std::string str() const;
+            std::string str() const;
     };
 }
 

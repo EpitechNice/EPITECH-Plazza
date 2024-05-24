@@ -33,7 +33,11 @@
 
     #define __POSITION_INFOS__ {{std::string(__FILE__), __LINE__}, std::string(__FUNCTION__)}
     #define throw_exception(exception, message) throw(exception(message, __POSITION_INFOS__))
+#ifdef DEBUG
     #define catch_exception(exception) exception.show(__POSITION_INFOS__)
+#else
+    #define catch_exception(exception) exception.display()
+#endif
 
 // Inspection
     #define display_attr(attribute) Flint::Colors::F_BLUE << #attribute << Flint::Colors::RESET << "=" << Flint::Colors::RED << this->attribute << Flint::Colors::RESET

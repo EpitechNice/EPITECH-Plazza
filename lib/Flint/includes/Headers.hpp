@@ -29,6 +29,7 @@
     #include <map>
     #include <memory>
     #include <ostream>
+    #include <regex>
     #include <sstream>
     #include <string>
     #include <sys/stat.h>

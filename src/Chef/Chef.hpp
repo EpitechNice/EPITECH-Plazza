@@ -28,6 +28,7 @@ namespace Plazza
         private:
             int _id;
             int _numPizzasInProgress;
+            int _isBaking;
 
         public:
             Chef(int id);

@@ -44,6 +44,7 @@ namespace Plazza
     Protocol::~Protocol()
     {
         close(this->_file);
+        unlink(this->_name.c_str());
     }
 
     size_t Protocol::getReadSize() const

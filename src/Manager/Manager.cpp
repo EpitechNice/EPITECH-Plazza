@@ -16,7 +16,6 @@
  *                                                                                      *
  * -----------------------------------------------------------------------------------  */
 
-
 #include "Manager.hpp"
 
 namespace Plazza
@@ -27,76 +26,170 @@ namespace Plazza
         this->_numChefs = numChefs;
         this->_restockTime = restockTime;
     }
-//TODO : Review
-    void Manager::receiveOrder(const std::string& order)
+//TODO : Review exception if grammatically invalid order
+    bool Manager::receiveOrder(const std::string& order)
     {
-        std::stringstream ss(order);
-        std::string token;
+        std::vector<std::string> tokens = this->strToWordArrayOnSteroid(order, " \t");
 
-        if (order == "status") {
+        if (!tokens.size())
+            return true;
+
+        if (tokens[0] == "status") {
             this->displayStatus();
-            return;
+            return true;
         }
-        while (std::getline(ss, token, ';')) {
-            this->preparePizza(token);
+
+        if (tokens[0] == "exit" || tokens[0] == "quit")
+            return false;
+
+        std::vector<std::string> requests = this->strToWordArrayOnSteroid(order, ";");
+        for (const std::string& token: requests) {
+            try {
+                this->preparePizza(token);
+            } catch (const Flint::Exceptions::Exception& e) {
+                std::cerr << catch_exception(e) << std::endl;
+            }
             this->manageKitchens();
         }
+        return true;
     }
 
     void Manager::manageKitchens()
     {
-        const auto waitTime = std::chrono::seconds(10);
+        const auto waitTime = std::chrono::milliseconds(this->_restockTime);
 
-        for (auto& kitchen : this->_kitchenList) {
-            if (kitchen->checkCooksStatus() == 1 && kitchen->checkIngredients() == 1) {
-                std::this_thread::sleep_for(waitTime);
-                kitchen->restockIngredients();
+        for (auto kitchen = _kitchenList.begin(); kitchen != _kitchenList.end();) {
+            if ((*kitchen)->getClose()) {
+                kitchen = _kitchenList.erase(kitchen);
+                continue;
             }
+            if ((*kitchen)->checkIngredients() == 1) {
+                std::this_thread::sleep_for(waitTime);
+                (*kitchen)->restockIngredients();
+            }
+            kitchen++;
         }
+    }
+
+    void Manager::stringToLower(std::string& str) const
+    {
+        for (std::size_t i = 0; i < str.size(); i++)
+            str[i] = std::tolower(str[i]);
     }
 
     void Manager::preparePizza(const std::string& pizza)
     {
-        std::string name;
-        std::string size;
-        int quantity = 1;
-        int multiplier;
-        std::stringstream ss(pizza);
+        std::string token = pizza;
+        std::regex first_token("[a-zA-Z]+");
+        std::regex second_token("^(S|M|L|XL|XXL)$");
+        std::regex third_token("x[1-9][0-9]*");
+        std::vector<std::string> tokens = this->strToWordArrayOnSteroid(token, " \t");
+
+        if (tokens.size() != 3)
+            throw_exception(Flint::Exceptions::InvalidCommandError, "There must be 3 tokens, " + std::to_string(tokens.size()) + " found.");
+
+        this->stringToLower(tokens[0]);
+        this->stringToLower(tokens[2]);
+
+        if (!std::regex_match(tokens[0], first_token))
+            throw_exception(Flint::Exceptions::InvalidCommandError, "First token of the order does not match regex !");
+
+        if (!std::regex_match(tokens[1], second_token))
+            throw_exception(Flint::Exceptions::InvalidCommandError, "Second token of the order does not match regex !");
+
+        if (!std::regex_match(tokens[2], third_token))
+            throw_exception(Flint::Exceptions::InvalidCommandError, "Third token of the order does not match regex !");
+
+        std::size_t quantity = std::stoul(tokens[2].substr(1));
+        size_t kitchenCount = this->_kitchenList.size();
+
+        std::size_t pizzasPerKitchen = quantity / kitchenCount;
+        std::size_t remainingPizzas = quantity % kitchenCount;
+
         std::map<Ingredients, int> requiredIngredients = {{Ingredients::Dough, 0}};
-        bool pizzaPrepared = false;
-
-        ss >> name >> size;
-        if (ss.peek() == 'x') {
-            ss.ignore();
-            ss >> quantity;
-        }
-        ss >> multiplier;
-
-        if (name == "Margarita") {
+        if (tokens[0] == "Margarita") {
             requiredIngredients = {{Ingredients::Dough, 1}, {Ingredients::Tomato, 1}, {Ingredients::Gruyere, 1}};
-        } else if (name == "Regina") {
+        } else if (tokens[0] == "Regina") {
             requiredIngredients = {{Ingredients::Dough, 1}, {Ingredients::Tomato, 1}, {Ingredients::Gruyere, 1}, {Ingredients::Ham, 1}, {Ingredients::Mushrooms, 1}};
-        } else if (name == "Americana") {
+        } else if (tokens[0] == "Americana") {
             requiredIngredients = {{Ingredients::Dough, 1}, {Ingredients::Tomato, 1}, {Ingredients::Gruyere, 1}, {Ingredients::Steak, 1}};
-        } else if (name == "Fantasia") {
+        } else if (tokens[0] == "Fantasia") {
             requiredIngredients = {{Ingredients::Dough, 1}, {Ingredients::Tomato, 1}, {Ingredients::Gruyere, 1}, {Ingredients::Eggplant, 1}, {Ingredients::GoatCheese, 1}, {Ingredients::ChiefLove, 1}};
         } else {
             std::cout << "\tReception Manager : Unknown pizza type." << std::endl;
             return;
         }
-        for (int i = 0; i < quantity; i++) {
-            for (auto& kitchen : this->_kitchenList) {
+
+        for (int i = 0; i < kitchenCount; ++i) {
+            auto& kitchen = this->_kitchenList[i];
+            for (int j = 0; j < pizzasPerKitchen; ++j) {
                 if (kitchen->isAvailable(requiredIngredients)) {
-                    kitchen->preparePizza(name, size, multiplier);
-                    pizzaPrepared = true;
-                    break;
+                    kitchen->preparePizza(tokens[0], tokens[1]);
+                    quantity--;
                 }
             }
-            if (!pizzaPrepared) {
-                this->_kitchenList.emplace_back(std::make_shared<Kitchen>(this->_multiplierCooking, this->_numChefs, this->_restockTime));
-                this->_kitchenList.back()->preparePizza(name, size, multiplier);
-            }
         }
+                                // std::string name;
+                                // std::string size;
+                                // int quantity = 1;
+                                // int multiplier;
+                                // std::stringstream ss(pizza);
+                                // std::map<Ingredients, int> requiredIngredients = {{Ingredients::Dough, 0}};
+                                // bool pizzaPrepared = false;
+
+                                // if (name == "Margarita") {
+                                //     requiredIngredients = {{Ingredients::Dough, 1}, {Ingredients::Tomato, 1}, {Ingredients::Gruyere, 1}};
+                                // } else if (name == "Regina") {
+                                //     requiredIngredients = {{Ingredients::Dough, 1}, {Ingredients::Tomato, 1}, {Ingredients::Gruyere, 1}, {Ingredients::Ham, 1}, {Ingredients::Mushrooms, 1}};
+                                // } else if (name == "Americana") {
+                                //     requiredIngredients = {{Ingredients::Dough, 1}, {Ingredients::Tomato, 1}, {Ingredients::Gruyere, 1}, {Ingredients::Steak, 1}};
+                                // } else if (name == "Fantasia") {
+                                //     requiredIngredients = {{Ingredients::Dough, 1}, {Ingredients::Tomato, 1}, {Ingredients::Gruyere, 1}, {Ingredients::Eggplant, 1}, {Ingredients::GoatCheese, 1}, {Ingredients::ChiefLove, 1}};
+                                // } else {
+                                //     std::cout << "\tReception Manager : Unknown pizza type." << std::endl;
+                                //     return;
+                                // }
+
+        // TODO : Is ok : quantity balanced here
+        // size_t kitchenCount = kitchens.size();
+        // int pizzasPerKitchen = quantity / kitchenCount;
+        // int remainingPizzas = quantity % kitchenCount;
+    
+        // // Répartition initiale des pizzas entre les cuisines disponibles
+        // for (int i = 0; i < kitchenCount; ++i) {
+        //     auto& kitchen = kitchens[i];
+        //     for (int j = 0; j < pizzasPerKitchen; ++j) {
+        //         if (kitchen->isAvailable(requiredIngredients)) {
+        //             kitchen->preparePizza(name, size, multiplier);
+        //             --quantity;
+        //         }
+        //     }
+        // }
+    
+        // // Répartir les pizzas restantes
+        // for (int i = 0; i < remainingPizzas; ++i) {
+        //     for (auto& kitchen : kitchens) {
+        //         if (kitchen->isAvailable(requiredIngredients)) {
+        //             kitchen->preparePizza(name, size);
+        //             quantity--;
+        //             break;
+        //         }
+        //     }
+        // }
+
+        // while (quantity > 0) {
+        //     auto newKitchen = std::make_shared<Kitchen>(numChefs);
+        //     kitchens.push_back(newKitchen);
+        //     bool kitchenAvailable = true;
+        //     while (kitchenAvailable && quantity > 0) {
+        //         if (newKitchen->isAvailable(requiredIngredients)) {
+        //             newKitchen->preparePizza(name, size);
+        //             quantity--;
+        //         } else {
+        //             kitchenAvailable = false;
+        //         }
+        //     }
+        // }
     }
 
     void Manager::setNumChefs(int num)
@@ -123,8 +216,38 @@ namespace Plazza
         }
     }
 
+    std::vector<std::string> Manager::strToWordArrayOnSteroid(const std::string& str, const std::string& delims) const
+    {
+        std::vector<std::string> output;
+
+        std::size_t pos_start = 0, pos_end = 0, min = 0;
+        std::string token;
+
+        while (min != std::string::npos) {
+            min = std::string::npos;
+            for (std::size_t i = 0; i < delims.size(); ++i) {
+                pos_end = str.find(delims[i], pos_start);
+                if (pos_end != std::string::npos && (pos_end < min || min == std::string::npos))
+                    min = pos_end;
+            }
+            if (min == std::string::npos) continue;
+            token = str.substr(pos_start, min - pos_start);
+            pos_start = min + 1;
+            if (token.size())
+                output.push_back(token);
+        }
+
+        if (pos_start >= str.size())
+            return output;
+    
+        if (str.substr(pos_start).size())
+            output.push_back(str.substr(pos_start));
+
+        return output;
+    }
+
     std::string Manager::str() const
     {
-        return make_str(display_attr(_multiplierCooking) << ", " << display_attr(_numChefs) << ", " << display_attr(_restockTime));
+        return make_str("No attributes");
     }
 }

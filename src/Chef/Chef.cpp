@@ -20,16 +20,21 @@
 namespace Plazza
 {
     Chef::Chef(int id) : _id(id), _numPizzasInProgress(0)
-    {}
+    {
+        this->_isBaking = false;
+    }
 
 //TODO : Serveur
     void Chef::cook(const std::string& name, const std::string& size, int cookingTime)
     {
+        while (this->_isBaking)
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+        this->_isBaking = true;
         std::cout << "\tThe Cook " << this->_id << " is preparing a pizza " << name << " of size " << size << "..." << std::endl;
         std::this_thread::sleep_for(std::chrono::seconds(cookingTime));
         std::cout << "\tPizza " << name << " of size " << size << " was prepared by Cook " << this->_id << std::endl;
-        // Serveur::getInstance().notifyReadyPizza(name + " " + size);
         this->_numPizzasInProgress--;
+        this->_isBaking = false;
     }
 
     void Chef::takeOrder()

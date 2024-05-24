@@ -1,29 +1,47 @@
+/*                                                                                      *
+ * EPITECH PROJECT - Sat, May, 2024                                                     *
+ * Title           - EPITECH-Plazza                                                     *
+ * Description     -                                                                    *
+ *     Reception                                                                        *
+ *                                                                                      *
+ * -----------------------------------------------------------------------------------  *
+ *                                                                                      *
+ *             ███████╗██████╗ ██╗████████╗███████╗ ██████╗██╗  ██╗                     *
+ *             ██╔════╝██╔══██╗██║╚══██╔══╝██╔════╝██╔════╝██║  ██║                     *
+ *             █████╗  ██████╔╝██║   ██║   █████╗  ██║     ███████║                     *
+ *             ██╔══╝  ██╔═══╝ ██║   ██║   ██╔══╝  ██║     ██╔══██║                     *
+ *             ███████╗██║     ██║   ██║   ███████╗╚██████╗██║  ██║                     *
+ *             ╚══════╝╚═╝     ╚═╝   ╚═╝   ╚══════╝ ╚═════╝╚═╝  ╚═╝                     *
+ *                                                                                      *
+ * -----------------------------------------------------------------------------------  */
+
+#include "includes.hpp"
 #include "Reception.hpp"
 #include "../Manager/Manager.hpp"
-#include <iostream>
-#include <sstream>
-
-//TODO: do an exception in Flink
 
 namespace Plazza
 {
     Reception::Reception(double multiplierCooking, int numChefs, int restockTime)
     {
         this->_manager = std::make_shared<Manager>(multiplierCooking, numChefs, restockTime);
-        std::cout << "DEBUG | Manager : " << this->_manager->str() << std::endl;
+        // std::cout << "DEBUG | Manager : " << this->_manager->str() << std::endl;
     }
 
     void Reception::run() {
         std::string input;
 
         while (true) {
-            std::cout << "> ";
+            if (isatty(0))
+                std::cout << "> ";
+            else
+                std::cout << "===" << std::endl;
             if (!std::getline(std::cin, input))
                 break;
             try {
-                this->_manager->receiveOrder(input);
-            } catch (const std::exception& e) {
-                    std::cerr << "Invalid command. (TEST)" << e.what() << std::endl;
+                if (!this->_manager->receiveOrder(input))
+                    break;
+            } catch (const Flint::Exceptions::Exception& e) {
+                std::cerr << e << std::endl;
             }
         }
     }
@@ -32,7 +50,6 @@ namespace Plazza
     {
         std::cout << "Reception: Your pizza " << pizza << " is ready to be enjoyed!" << std::endl;
     }
-
 
     std::string Reception::str() const
     {
