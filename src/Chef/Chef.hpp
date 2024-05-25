@@ -1,18 +1,16 @@
 /*                                                                                      *
- * EPITECH PROJECT - Fri, May, 2024                                                     *
- * Title           - EPITECH-Plazza                                                     *
+ * EPITECH PROJECT - Sun, May, 2024                                                     *
+ * Title           - Visual Studio Live Share (Workspace)                               *
  * Description     -                                                                    *
  *     Chef                                                                             *
  *                                                                                      *
  * -----------------------------------------------------------------------------------  *
  *                                                                                      *
- *       ▄▀▀█▄▄▄▄  ▄▀▀▄▀▀▀▄  ▄▀▀█▀▄    ▄▀▀▀█▀▀▄  ▄▀▀█▄▄▄▄  ▄▀▄▄▄▄   ▄▀▀▄ ▄▄             *
- *      ▐  ▄▀   ▐ █   █   █ █   █  █  █    █  ▐ ▐  ▄▀   ▐ █ █    ▌ █  █   ▄▀            *
- *        █▄▄▄▄▄  ▐  █▀▀▀▀  ▐   █  ▐  ▐   █       █▄▄▄▄▄  ▐ █      ▐  █▄▄▄█             *
- *        █    ▌     █          █        █        █    ▌    █         █   █             *
- *       ▄▀▄▄▄▄    ▄▀        ▄▀▀▀▀▀▄   ▄▀        ▄▀▄▄▄▄    ▄▀▄▄▄▄▀   ▄▀  ▄▀             *
- *       █    ▐   █         █       █ █          █    ▐   █     ▐   █   █               *
- *       ▐        ▐         ▐       ▐ ▐          ▐        ▐         ▐   ▐               *
+ *       _|_|_|_|  _|_|_|    _|_|_|  _|_|_|_|_|  _|_|_|_|    _|_|_|  _|    _|           *
+ *       _|        _|    _|    _|        _|      _|        _|        _|    _|           *
+ *       _|_|_|    _|_|_|      _|        _|      _|_|_|    _|        _|_|_|_|           *
+ *       _|        _|          _|        _|      _|        _|        _|    _|           *
+ *       _|_|_|_|  _|        _|_|_|      _|      _|_|_|_|    _|_|_|  _|    _|           *
  *                                                                                      *
  * -----------------------------------------------------------------------------------  */
 
@@ -23,28 +21,35 @@
 
 namespace Plazza
 {
-    class Chef: Flint::Inspection<Chef>
+    class Chef: public Flint::Inspection<Chef>
     {
         private:
-            int _id;
-            int _numPizzasInProgress;
-            int _isBaking;
+            std::size_t _id;
+
+            const std::size_t _maxPizzaCount = 2;
+            std::deque<std::tuple<Plazza::PizzaType, Plazza::PizzaSize, std::size_t>> _pizzas;
+            std::mutex _pizzaToDo;
+            bool _keepRunning;
+
+            std::thread _thread;
 
         public:
-            Chef(int id);
-            ~Chef() = default;
+            Chef(std::size_t id);
+            ~Chef();
 
-            void cook(const std::string& name, const std::string& size, int cookingTime);
-            void takeOrder();
+            static void run(Chef* self);
+
+            void start();
+            void stop();
+
+            std::string getType(Plazza::PizzaType type) const;
+            std::string getSize(Plazza::PizzaSize size) const;
+
+
+            void addPizza(std::pair<Plazza::PizzaType, Plazza::PizzaSize> pizza);
             bool isAvailable() const;
-
-            int getId() const;
-            int getNumPizzasInProgress() const;
-
-            void setNumPizzasInProgress(int num);
-
-            std::string str() const;
     };
 }
 
-#endif // CHEF_HPP
+
+#endif

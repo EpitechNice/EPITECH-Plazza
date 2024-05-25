@@ -23,7 +23,7 @@
 
 namespace Plazza
 {
-    class Core: Flint::Inspection<Core>
+    class Core: public Flint::Inspection<Core>
     {
         public:
             Core(int argc, char **argv);

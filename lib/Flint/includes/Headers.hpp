@@ -20,6 +20,7 @@
 
     #include <algorithm>
     #include <cmath>
+    #include <csignal>
     #include <cxxabi.h>
     #include <deque>
     #include <exception>

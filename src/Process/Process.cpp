@@ -30,11 +30,11 @@ namespace Plazza
         //In child processus
         if (this->_pid == 0) {
             this->_running = false;
-            this->_type = processType::PARENT;
+            this->_type = processType::CHILD;
         } else {
         //In parent processus
             this->_running = true;
-            this->_type = processType::CHILD;
+            this->_type = processType::PARENT;
         }
     }
 
@@ -56,7 +56,7 @@ namespace Plazza
 
     void Process::killPid(void)
     {
-        if (this->_running){
+        if (this->_running) {
             kill(this->_pid, SIGUSR2);
             this->_running = false;
         }

@@ -1,69 +1,110 @@
-/*                                                                                      *
- * EPITECH PROJECT - Fri, May, 2024                                                     *
- * Title           - EPITECH-Plazza                                                     *
+/* ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * EPITECH PROJECT - Sun, May, 2024                                                     *
+ * Title           - Plazza                                                             *
  * Description     -                                                                    *
  *     Chef                                                                             *
  *                                                                                      *
- * -----------------------------------------------------------------------------------  *
+ * ------------------------------------------------------------------------------------ *
  *                                                                                      *
- *             ███████╗██████╗ ██╗████████╗███████╗ ██████╗██╗  ██╗                     *
- *             ██╔════╝██╔══██╗██║╚══██╔══╝██╔════╝██╔════╝██║  ██║                     *
- *             █████╗  ██████╔╝██║   ██║   █████╗  ██║     ███████║                     *
- *             ██╔══╝  ██╔═══╝ ██║   ██║   ██╔══╝  ██║     ██╔══██║                     *
- *             ███████╗██║     ██║   ██║   ███████╗╚██████╗██║  ██║                     *
- *             ╚══════╝╚═╝     ╚═╝   ╚═╝   ╚══════╝ ╚═════╝╚═╝  ╚═╝                     *
+ *       _|_|_|_|  _|_|_|    _|_|_|  _|_|_|_|_|  _|_|_|_|    _|_|_|  _|    _|           *
+ *       _|        _|    _|    _|        _|      _|        _|        _|    _|           *
+ *       _|_|_|    _|_|_|      _|        _|      _|_|_|    _|        _|_|_|_|           *
+ *       _|        _|          _|        _|      _|        _|        _|    _|           *
+ *       _|_|_|_|  _|        _|_|_|      _|      _|_|_|_|    _|_|_|  _|    _|           *
  *                                                                                      *
- * -----------------------------------------------------------------------------------  */
+ * ------------------------------------------------------------------------------------ */
 
 #include "Chef.hpp"
 
 namespace Plazza
 {
-    Chef::Chef(int id) : _id(id), _numPizzasInProgress(0)
+    Chef::Chef(std::size_t id):
+        _id(id), _keepRunning(false)
+    {}
+
+    void Chef::start()
     {
-        this->_isBaking = false;
+        this->_keepRunning = true;
+        this->_pizzaToDo.lock();
+        this->_thread = std::thread(Chef::run, this);
     }
 
-//TODO : Clock
-    void Chef::cook(const std::string& name, const std::string& size, int cookingTime)
+    void Chef::stop()
     {
-        while (this->_isBaking)
-            std::this_thread::sleep_for(std::chrono::seconds(1));
-        this->_isBaking = true;
-        std::cout << "\tThe Cook " << this->_id << " is preparing a pizza " << name << " of size " << size << "..." << std::endl;
-        std::this_thread::sleep_for(std::chrono::milliseconds(cookingTime * 1000));
-        std::cout << "\tPizza " << name << " of size " << size << " was prepared by Cook " << this->_id << std::endl;
-        this->_numPizzasInProgress--;
-        this->_isBaking = false;
+        this->_keepRunning = false;
+        if (this->_thread.joinable())
+            this->_thread.join();
     }
 
-    void Chef::takeOrder()
+    std::string Chef::getType(Plazza::PizzaType type) const
     {
-        this->_numPizzasInProgress++;
+        switch (type)
+        {
+            case Plazza::PizzaType::Regina:
+                return "Regina";
+
+            case Plazza::PizzaType::Margarita:
+                return "Margarita";
+
+            case Plazza::PizzaType::Americana:
+                return "Americana";
+
+            case Plazza::PizzaType::Fantasia:
+                return "Fantasia";
+
+            default:
+                break;
+        }
+        return "";
+    }
+
+    std::string Chef::getSize(Plazza::PizzaSize size) const
+    {
+        switch (size)
+        {
+            case Plazza::PizzaSize::S:
+                return "S";
+
+            case Plazza::PizzaSize::M:
+                return "M";
+
+            case Plazza::PizzaSize::L:
+                return "L";
+
+            case Plazza::PizzaSize::XL:
+                return "XL";
+
+            case Plazza::PizzaSize::XXL:
+                return "XXL";
+
+            default:
+                break;
+        }
+        return "";
+    }
+
+    void Chef::run(Chef* self)
+    {
+        while (self->_keepRunning) {
+            self->_pizzaToDo.lock();
+            std::cout << "\r\tThe Cook " <<
+                    self->_id << " is preparing a pizza " <<
+                    self->getType(std::get<0>(self->_pizzas[self->_pizzas.size() - 1])) << " of size " <<
+                    self->getSize(std::get<1>(self->_pizzas[self->_pizzas.size() - 1])) << "..." << std::endl;
+            std::this_thread::sleep_for(std::chrono::milliseconds(std::get<2>(self->_pizzas[self->_pizzas.size() - 1]) * 1000));
+            std::cout << "\r\tPizza " <<
+                    self->getType(std::get<0>(self->_pizzas[self->_pizzas.size() - 1])) << " of size " <<
+                    self->getSize(std::get<1>(self->_pizzas[self->_pizzas.size() - 1])) << " was prepared by Cook " <<
+                    self->_id << std::endl;
+            self->_pizzas.pop_back();
+            if (self->_pizzas.size())
+                self->_pizzaToDo.unlock();
+        }
     }
 
     bool Chef::isAvailable() const
     {
-        return this->_numPizzasInProgress < 2;
-    }
-
-    int Chef::getId() const
-    {
-        return this->_id;
-    }
-
-    int Chef::getNumPizzasInProgress() const
-    {
-        return this->_numPizzasInProgress;
-    }
-
-    void Chef::setNumPizzasInProgress(int num)
-    {
-        this->_numPizzasInProgress = num;
-    }
-
-    std::string Chef::str() const
-    {
-        return make_str(display_attr(_id) << ", " << display_attr(_numPizzasInProgress));
+        return this->_pizzas.size() != 0;
     }
 }

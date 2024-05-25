@@ -22,7 +22,7 @@
 
 namespace Plazza
 {
-    class Parsing: Flint::Inspection<Parsing>
+    class Parsing: public Flint::Inspection<Parsing>
     {
         private:
             double _multiplierTime = 0;

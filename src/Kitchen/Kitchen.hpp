@@ -1,93 +1,68 @@
-/*                                                                                      *
- * EPITECH PROJECT - Fri, May, 2024                                                     *
- * Title           - EPITECH-Plazza                                                     *
+/* ------------------------------------------------------------------------------------ *
+ *                                                                                      *
+ * EPITECH PROJECT - Sun, May, 2024                                                     *
+ * Title           - Plazza                                                             *
  * Description     -                                                                    *
  *     Kitchen                                                                          *
  *                                                                                      *
- * -----------------------------------------------------------------------------------  *
+ * ------------------------------------------------------------------------------------ *
  *                                                                                      *
- *         ░        ░       ░░        ░        ░        ░░      ░░  ░░░░  ░             *
- *         ▒  ▒▒▒▒▒▒▒  ▒▒▒▒  ▒▒▒▒  ▒▒▒▒▒▒▒  ▒▒▒▒  ▒▒▒▒▒▒▒  ▒▒▒▒  ▒  ▒▒▒▒  ▒             *
- *         ▓      ▓▓▓       ▓▓▓▓▓  ▓▓▓▓▓▓▓  ▓▓▓▓      ▓▓▓  ▓▓▓▓▓▓▓        ▓             *
- *         █  ███████  ██████████  ███████  ████  ███████  ████  █  ████  █             *
- *         █        █  ███████        ████  ████        ██      ██  ████  █             *
+ *             ███████╗██████╗ ██╗████████╗███████╗ ██████╗██╗  ██╗                     *
+ *             ██╔════╝██╔══██╗██║╚══██╔══╝██╔════╝██╔════╝██║  ██║                     *
+ *             █████╗  ██████╔╝██║   ██║   █████╗  ██║     ███████║                     *
+ *             ██╔══╝  ██╔═══╝ ██║   ██║   ██╔══╝  ██║     ██╔══██║                     *
+ *             ███████╗██║     ██║   ██║   ███████╗╚██████╗██║  ██║                     *
+ *             ╚══════╝╚═╝     ╚═╝   ╚═╝   ╚══════╝ ╚═════╝╚═╝  ╚═╝                     *
  *                                                                                      *
- * -----------------------------------------------------------------------------------  */
+ * ------------------------------------------------------------------------------------ */
 
-#ifndef KITCHEN_HPP
-    #define KITCHEN_HPP
+#ifndef INCLUDED_KITCHEN_HPP
+    #define INCLUDED_KITCHEN_HPP
 
     #include "includes.hpp"
     #include "../Chef/Chef.hpp"
+    #include "../Process/Process.hpp"
 
 namespace Plazza
 {
-    enum class PizzaType {
-        Regina      = 1 << 0,
-        Margarita   = 1 << 1,
-        Americana   = 1 << 2,
-        Fantasia    = 1 << 3
-    };
-
-    enum class PizzaSize {
-        S           = 1 << 0,
-        M           = 1 << 1,
-        L           = 1 << 2,
-        XL          = 1 << 3,
-        XXL         = 1 << 4
-    };
-
-    enum class Ingredients {
-        Dough       = 1 << 0,
-        Tomato      = 1 << 1,
-        Gruyere     = 1 << 2,
-        Ham         = 1 << 3,
-        Mushrooms   = 1 << 4,
-        Eggplant    = 1 << 5,
-        GoatCheese  = 1 << 6,
-        ChiefLove   = 1 << 7,
-        Steak       = 1 << 8
-    };
-
-    class Kitchen: Flint::Inspection<Kitchen>
+    class Kitchen: public Flint::Inspection<Kitchen>
     {
         private:
-            std::mutex _mutex;
-            std::thread _monitorThread;
-            pid_t _pid;
+            bool _running;
+            // Plazza::Process _process;
 
             double _multiplierCooking;
-            std::vector<Chef> _chefs;
             int _restockTime;
 
-            std::map<Ingredients, int> _ingredientsStock;
+            std::vector<std::shared_ptr<Plazza::Chef>> _chefs;
 
-            bool _running;
-            bool _toClose;
+            std::map<Ingredients, int> _ingredientsStock = {
+                {Plazza::Ingredients::Dough, 5},
+                {Plazza::Ingredients::Tomato, 5},
+                {Plazza::Ingredients::Gruyere, 5},
+                {Plazza::Ingredients::Ham, 5},
+                {Plazza::Ingredients::Mushrooms, 5},
+                {Plazza::Ingredients::Eggplant, 5},
+                {Plazza::Ingredients::GoatCheese, 5},
+                {Plazza::Ingredients::ChiefLove, 5},
+                {Plazza::Ingredients::Steak, 5},
+            };
 
-            void monitorActivity();
+            std::mutex _isOver;
 
         public:
             Kitchen(double multiplierCooking, int numChefs, int restockTime);
-            ~Kitchen();
+            ~Kitchen() = default;
+
 
             bool isAvailable(const std::map<Ingredients, int>& requiredIngredients);
-            void preparePizza(const std::string& name, const std::string& size);
-            int checkCooksStatus();
-            int checkIngredients();
-            int calculateCookingTime(const std::string& name, const std::string& size);
-            void restockIngredients();
-
-            void startMonitoring(); // Démarrer la surveillance
-            void stopMonitoring(); // Arrêter la surveillance
-
             std::string getIngredientName(Ingredients ingredient);
-            bool getClose();
-
             void displayStatus();
+
+            void waitDeath();
 
             std::string str() const;
     };
-}
 
-#endif // KITCHEN_HPP
+}
+#endif

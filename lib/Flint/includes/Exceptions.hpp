@@ -134,6 +134,15 @@ namespace Flint::Exceptions
                 Exception(what, infos)
             {}
     };
+
+    class LogicError: public Flint::Exceptions::Exception
+    {
+        public:
+            LogicError(std::string what = "Logic error",
+                              std::pair<std::pair<std::string, std::size_t>, std::string> infos = {{"", 0}, ""}):
+                Exception(what, infos)
+            {}
+    };
 }
 
 #endif

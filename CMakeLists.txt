@@ -27,10 +27,10 @@ add_executable(plazza
     src/Kitchen/Kitchen.cpp
     src/Manager/Manager.cpp
     src/Parsing/Parsing.cpp
-    src/Protocol/Protocol.cpp
     src/Reception/Reception.cpp
     src/Process/Process.cpp
     src/Thread/Thread.cpp
+    src/Protocol/PizzaPool.cpp
     src/Main.cpp
 )
 

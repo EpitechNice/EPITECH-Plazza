@@ -21,11 +21,10 @@
     #define INCLUDED_PIZZAPOOL_HPP
 
     #include "includes.hpp"
-    #include "../Kitchen/Kitchen.hpp"
 
 namespace Plazza
 {
-    class PizzaPool: Flint::Inspection<PizzaPool>
+    class PizzaPool: public Flint::Inspection<PizzaPool>
     {
         private:
             std::deque<std::pair<Plazza::PizzaType, Plazza::PizzaSize>> _todo;

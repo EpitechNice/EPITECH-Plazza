@@ -23,7 +23,7 @@
 
 namespace Plazza
 {
-    class Reception: Flint::Inspection<Reception>
+    class Reception: public Flint::Inspection<Reception>
     {
         private:
             std::shared_ptr<Manager> _manager;

@@ -25,6 +25,7 @@ namespace Plazza
         this->_multiplierCooking = multiplierCooking;
         this->_numChefs = numChefs;
         this->_restockTime = restockTime;
+        this->_pizzaPool = std::make_shared<Plazza::PizzaPool>();
     }
 //TODO : Review exception if grammatically invalid order
     bool Manager::receiveOrder(const std::string& order)
@@ -59,13 +60,13 @@ namespace Plazza
         const auto waitTime = std::chrono::milliseconds(this->_restockTime);
 
         for (auto kitchen = _kitchenList.begin(); kitchen != _kitchenList.end();) {
-            if ((*kitchen)->getClose()) {
+            if ((kitchen->get())->getClose()) {
                 kitchen = _kitchenList.erase(kitchen);
                 continue;
             }
-            if ((*kitchen)->checkIngredients() == 1) {
+            if ((kitchen->get())->checkIngredients() == 1) {
                 std::this_thread::sleep_for(waitTime);
-                (*kitchen)->restockIngredients();
+                (kitchen->get())->restockIngredients();
             }
             kitchen++;
         }
@@ -73,13 +74,27 @@ namespace Plazza
 
     void Manager::createKitchen(void)
     {
-        Plazza::Process _process;
-        // pid_t pid = _process.create();
-// 
+        std::shared_ptr<Plazza::Process> process = std::make_shared<Plazza::Process>();
+
+        if (process->getType() == Plazza::processType::CHILD) {
+            std::shared_ptr<Kitchen> newKitchen = std::make_shared<Kitchen>(this->_multiplierCooking, this->_numChefs, this->_restockTime);
+            this->_kitchenList.push_back(newKitchen);
+            newKitchen->waitDeath();
+            auto pos = std::find(this->_kitchenList.begin(), this->_kitchenList.end(), newKitchen);
+            if (pos == this->_kitchenList.end())
+                std::exit(1);
+            this->_kitchenList.erase(pos);
+            std::exit(0);
+        }
+        this->_processList.push_back(process);
+        // process.killPid();
+        // else {
+            // std::shared_ptr<Kitchen> newKitchen = std::make_shared<Kitchen>(this->_multiplierCooking, this->_numChefs, this->_restockTime);
+            // this->_kitchenList.push_back(newKitchen);
+        // }
+
         // if (_process.getType() == Plazza::processType::CHILD)
             // auto firstKitchen = std::make_shared<Kitchen>(this->_multiplierCooking, this->_numChefs, this->_restockTime);
-            // this->_kitchenList.push_back(firstKitchen);
-        
     }
 
     void Manager::stringToLower(std::string& str) const
@@ -115,8 +130,9 @@ namespace Plazza
         size_t kitchenCount = this->_kitchenList.size();
 
         if (!kitchenCount) {
-            auto firstKitchen = std::make_shared<Kitchen>(this->_multiplierCooking, this->_numChefs, this->_restockTime);
-            this->_kitchenList.push_back(firstKitchen);
+            // auto firstKitchen = std::make_shared<Kitchen>(this->_multiplierCooking, this->_numChefs, this->_restockTime);
+            this->createKitchen();
+            // this->_kitchenList.push_back(firstKitchen);
             kitchenCount++;
         }
 
