@@ -29,6 +29,8 @@ add_executable(plazza
     src/Parsing/Parsing.cpp
     src/Protocol/Protocol.cpp
     src/Reception/Reception.cpp
+    src/Process/Process.cpp
+    src/Thread/Thread.cpp
     src/Main.cpp
 )
 

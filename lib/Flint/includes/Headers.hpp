@@ -41,6 +41,8 @@
     #include <chrono>
     #include <thread>
     #include <mutex>
+    #include <sys/wait.h>
+    #include <signal.h>
 
 namespace fs = std::filesystem;
 
