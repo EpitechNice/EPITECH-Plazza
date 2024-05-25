@@ -1,8 +1,8 @@
 /*                                                                                      *
- * EPITECH PROJECT - Fri, May, 2024                                                     *
+ * EPITECH PROJECT - Sat, May, 2024                                                     *
  * Title           - EPITECH-Plazza                                                     *
  * Description     -                                                                    *
- *     Chef                                                                             *
+ *     Reception                                                                        *
  *                                                                                      *
  * -----------------------------------------------------------------------------------  *
  *                                                                                      *
@@ -15,55 +15,44 @@
  *                                                                                      *
  * -----------------------------------------------------------------------------------  */
 
-#include "Chef.hpp"
+#include "includes.hpp"
+#include "Reception.hpp"
+#include "../Manager/Manager.hpp"
 
 namespace Plazza
 {
-    Chef::Chef(int id) : _id(id), _numPizzasInProgress(0)
+    Reception::Reception(double multiplierCooking, int numChefs, int restockTime)
     {
-        this->_isBaking = false;
+        this->_manager = std::make_shared<Manager>(multiplierCooking, numChefs, restockTime);
+        // std::cout << "DEBUG | Manager : " << this->_manager->str() << std::endl;
     }
 
-//TODO : Serveur
-    void Chef::cook(const std::string& name, const std::string& size, int cookingTime)
-    {
-        while (this->_isBaking)
-            std::this_thread::sleep_for(std::chrono::seconds(1));
-        this->_isBaking = true;
-        std::cout << "\tThe Cook " << this->_id << " is preparing a pizza " << name << " of size " << size << "..." << std::endl;
-        std::this_thread::sleep_for(std::chrono::milliseconds(cookingTime));
-        std::cout << "\tPizza " << name << " of size " << size << " was prepared by Cook " << this->_id << std::endl;
-        this->_numPizzasInProgress--;
-        this->_isBaking = false;
+    void Reception::run() {
+        std::string input;
+
+        while (true) {
+            if (isatty(0))
+                std::cout << "> ";
+            else
+                std::cout << "===" << std::endl;
+            if (!std::getline(std::cin, input))
+                break;
+            try {
+                if (!this->_manager->receiveOrder(input))
+                    break;
+            } catch (const Flint::Exceptions::Exception& e) {
+                std::cerr << e << std::endl;
+            }
+        }
     }
 
-    void Chef::takeOrder()
+    void Reception::notifyReadyPizza(const std::string& pizza)
     {
-        this->_numPizzasInProgress++;
+        std::cout << "Reception: Your pizza " << pizza << " is ready to be enjoyed!" << std::endl;
     }
 
-    bool Chef::isAvailable() const
+    std::string Reception::str() const
     {
-        return this->_numPizzasInProgress < 2;
-    }
-
-    int Chef::getId() const
-    {
-        return this->_id;
-    }
-
-    int Chef::getNumPizzasInProgress() const
-    {
-        return this->_numPizzasInProgress;
-    }
-
-    void Chef::setNumPizzasInProgress(int num)
-    {
-        this->_numPizzasInProgress = num;
-    }
-
-    std::string Chef::str() const
-    {
-        return make_str(display_attr(_id) << ", " << display_attr(_numPizzasInProgress));
+        return make_str("No attributes");
     }
 }

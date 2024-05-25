@@ -1,8 +1,8 @@
 /*                                                                                      *
- * EPITECH PROJECT - Tue, May, 2024                                                     *
- * Title           - Visual Studio Live Share (Workspace)                               *
+ * EPITECH PROJECT - Sun, May, 2024                                                     *
+ * Title           - EPITECH-Plazza                                                     *
  * Description     -                                                                    *
- *     Core                                                                             *
+ *     Process                                                                          *
  *                                                                                      *
  * -----------------------------------------------------------------------------------  *
  *                                                                                      *
@@ -14,27 +14,32 @@
  *                                                                                      *
  * -----------------------------------------------------------------------------------  */
 
-#ifndef CORE_HPP
-    #define CORE_HPP
+#ifndef PROCESS_HPP
+    #define PROCESS_HPP
 
     #include "includes.hpp"
-    #include "../Parsing/Parsing.hpp"
-    #include "../Reception/Reception.hpp"
 
 namespace Plazza
 {
-    class Core: Flint::Inspection<Core>
+    enum class processType {
+        CHILD,
+        PARENT
+    };
+
+    class Process
     {
+        private:
+            pid_t _pid;
+            bool _running;
+            processType _type;
+
         public:
-            Core(int argc, char **argv);
-            ~Core() = default;
+            Process();
+            ~Process() = default;
 
-            void handleExec(int argc, char **argv);
-            void usage(std::string filename);
-
-            void loop(double multiplierCooking, int numChefs, int restockTime);
-
-            std::string str() const;
+            void create(void);
+            void wait(void);
+            void killPid(void);
     };
 }
 

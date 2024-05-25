@@ -20,12 +20,14 @@
 namespace Flint::Exceptions
 {
     Exception::Exception(std::string what, std::pair<std::pair<std::string, std::size_t>, std::string> infos):
-        _infos(infos)
+        _what(what), _infos(infos)
     {
         std::vector<std::pair<std::string, std::size_t>> stackTrace = CxxABI::getBacktrace();
         std::stringstream ss;
 
-        ss << "[" << Flint::Colors::F_PURPLE << this->getClassNameFromStackTrace(stackTrace) << Flint::Colors::RESET;
+        this->_className = this->getClassNameFromStackTrace(stackTrace);
+
+        ss << "[" << Flint::Colors::F_PURPLE << this->_className << Flint::Colors::RESET;
 
         if (!infos.first.first.empty() && !infos.second.empty()) {
             ss << " in " <<
@@ -49,7 +51,7 @@ namespace Flint::Exceptions
             Flint::Colors::YELLOW << "0x" << std::hex << stackTrace[i].second << Flint::Colors::RESET;
         }
 
-        this->_what = ss.str();
+        this->_pretty = ss.str();
     }
 
     std::pair<std::pair<std::string, std::size_t>, std::string> Exception::getInfos() const
@@ -84,6 +86,14 @@ namespace Flint::Exceptions
               Flint::Colors::F_RED   << fileInfos.first.second << Flint::Colors::RESET << std::endl << std::endl;
 
         ss << this->_what;
+        return ss.str();
+    }
+
+    std::string Exception::display() const
+    {
+        std::stringstream ss;
+        ss << "[" << Flint::Colors::PURPLE << this->_className << Flint::Colors::RESET << "] " <<
+            this->_what;
         return ss.str();
     }
 

@@ -20,25 +20,28 @@
 
     #include "includes.hpp"
 
-class Parsing: Flint::Inspection<Parsing>
+namespace Plazza
 {
-    private:
-        double _multiplierTime = 0;
-        std::size_t _nbCooks = 0;
-        std::size_t _refillTime = 0;
-        Parsing() = default;
+    class Parsing: Flint::Inspection<Parsing>
+    {
+        private:
+            double _multiplierTime = 0;
+            std::size_t _nbCooks = 0;
+            std::size_t _refillTime = 0;
+            Parsing() = default;
 
-    public:
-        ~Parsing() = default;
-        static Parsing& get();
+        public:
+            ~Parsing() = default;
+            static Parsing& get();
 
-        void parse(int argc, char** argv);
+            void parse(int argc, char** argv);
 
-        double getMultiplierTime() const;
-        int getNbCooks() const;
-        std::size_t getRefillTime() const;
+            double getMultiplierTime() const;
+            int getNbCooks() const;
+            std::size_t getRefillTime() const;
 
-        std::string str() const;
-};
+            std::string str() const;
+    };
+}
 
 #endif

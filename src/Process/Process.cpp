@@ -1,8 +1,8 @@
 /*                                                                                      *
- * EPITECH PROJECT - Fri, May, 2024                                                     *
+ * EPITECH PROJECT - Sun, May, 2024                                                     *
  * Title           - EPITECH-Plazza                                                     *
  * Description     -                                                                    *
- *     Chef                                                                             *
+ *     Process                                                                          *
  *                                                                                      *
  * -----------------------------------------------------------------------------------  *
  *                                                                                      *
@@ -15,55 +15,54 @@
  *                                                                                      *
  * -----------------------------------------------------------------------------------  */
 
-#include "Chef.hpp"
+#include "Process.hpp"
 
 namespace Plazza
 {
-    Chef::Chef(int id) : _id(id), _numPizzasInProgress(0)
+    Process::Process() : _pid(0), _running(false)
     {
-        this->_isBaking = false;
+        this->_running = false;
+        this->_pid = fork();
     }
 
-//TODO : Serveur
-    void Chef::cook(const std::string& name, const std::string& size, int cookingTime)
+    Process::~Process()
     {
-        while (this->_isBaking)
-            std::this_thread::sleep_for(std::chrono::seconds(1));
-        this->_isBaking = true;
-        std::cout << "\tThe Cook " << this->_id << " is preparing a pizza " << name << " of size " << size << "..." << std::endl;
-        std::this_thread::sleep_for(std::chrono::milliseconds(cookingTime));
-        std::cout << "\tPizza " << name << " of size " << size << " was prepared by Cook " << this->_id << std::endl;
-        this->_numPizzasInProgress--;
-        this->_isBaking = false;
+        if (this->_running)
+            this->killPid();
     }
 
-    void Chef::takeOrder()
+    void Process::create(void)
     {
-        this->_numPizzasInProgress++;
+        if (this->_pid == -1) {
+            std::cout << "Exception fork failed" << std::endl;
+            return;
+        }
+
+        if (this->_pid == 0) {
+            this->_running = true;
+            this->_type = processType::CHILD;
+        } else {
+            this->_running = true;
+            this->_type = processType::PARENT;
+        }
     }
 
-    bool Chef::isAvailable() const
+    void Process::wait(void)
     {
-        return this->_numPizzasInProgress < 2;
+        if (this->_running) {
+            if (waitpid(this->_pid, nullptr, 0) != 0) {
+                std::cout << "Throw Exception" << std::endl;
+                return;
+            }
+            this->_running = false;
+        }
     }
 
-    int Chef::getId() const
+    void Process::killPid(void)
     {
-        return this->_id;
-    }
-
-    int Chef::getNumPizzasInProgress() const
-    {
-        return this->_numPizzasInProgress;
-    }
-
-    void Chef::setNumPizzasInProgress(int num)
-    {
-        this->_numPizzasInProgress = num;
-    }
-
-    std::string Chef::str() const
-    {
-        return make_str(display_attr(_id) << ", " << display_attr(_numPizzasInProgress));
+        if (this->_running){
+            kill(this->_pid, SIGTERM);
+            this->_running = false;
+        }
     }
 }

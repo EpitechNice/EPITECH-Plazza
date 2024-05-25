@@ -44,6 +44,7 @@ namespace Plazza
     Protocol::~Protocol()
     {
         close(this->_file);
+        unlink(this->_name.c_str());
     }
 
     size_t Protocol::getReadSize() const
@@ -69,7 +70,7 @@ namespace Plazza
 
     void Protocol::Write(std::string data)
     {
-        int result = write(this->_file, data.c_str(), data.size());
+        std::size_t result = write(this->_file, data.c_str(), data.size());
         if (result != data.size())
             throw_exception(Flint::Exceptions::WriteError, "Error while writing \"" + data + "\" to file \"" + this->_name + "\"");
     }

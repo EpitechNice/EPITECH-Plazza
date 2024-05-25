@@ -1,8 +1,8 @@
 /*                                                                                      *
- * EPITECH PROJECT - Tue, May, 2024                                                     *
- * Title           - Visual Studio Live Share (Workspace)                               *
+ * EPITECH PROJECT - Sun, May, 2024                                                     *
+ * Title           - EPITECH-Plazza                                                     *
  * Description     -                                                                    *
- *     Core                                                                             *
+ *     Thread                                                                           *
  *                                                                                      *
  * -----------------------------------------------------------------------------------  *
  *                                                                                      *
@@ -14,27 +14,26 @@
  *                                                                                      *
  * -----------------------------------------------------------------------------------  */
 
-#ifndef CORE_HPP
-    #define CORE_HPP
+#ifndef THREAD_HPP
+    #define THREAD_HPP
 
     #include "includes.hpp"
-    #include "../Parsing/Parsing.hpp"
-    #include "../Reception/Reception.hpp"
 
 namespace Plazza
 {
-    class Core: Flint::Inspection<Core>
+    class Thread
     {
+        private:
+            std::thread _thread;
+            bool _running;
+
         public:
-            Core(int argc, char **argv);
-            ~Core() = default;
+            Thread();
+            ~Thread() = default;
 
-            void handleExec(int argc, char **argv);
-            void usage(std::string filename);
+            void start(void (*function)(void));
+            void join(void);
 
-            void loop(double multiplierCooking, int numChefs, int restockTime);
-
-            std::string str() const;
     };
 }
 

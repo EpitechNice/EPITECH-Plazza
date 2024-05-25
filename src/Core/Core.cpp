@@ -20,6 +20,10 @@ namespace Plazza
 {
     Core::Core(int argc, char **argv)
     {
+        double multiplierCooking;
+        int numChefs;
+        int restockTime;
+
         if (argc == 2 &&
             (std::string(argv[1]) == "-h" || std::string(argv[1]) == "--help")) {
             this->usage(argv[0]);
@@ -27,35 +31,30 @@ namespace Plazza
         }
         try {
             Parsing::get().parse(argc, argv);
+            multiplierCooking = Parsing::get().getMultiplierTime();
+            numChefs = Parsing::get().getNbCooks();
+            restockTime = Parsing::get().getRefillTime();
         } catch (const Flint::Exceptions::Exception& e) {
             std::cerr << catch_exception(e) << std::endl;
             std::exit(84);
         }
 
-        std::cout << "Multiplier time: " << Parsing::get().getMultiplierTime() << std::endl;
-        std::cout << "Nb cooks: " << Parsing::get().getNbCooks() << std::endl;
-        std::cout << "Refill time: " << Parsing::get().getRefillTime() << std::endl;
-        this->run();
+        // std::cout << "DEBUG | Multiplier time: " << Parsing::get().getMultiplierTime() << std::endl;
+        // std::cout << "DEBUG | Nb cooks: " << Parsing::get().getNbCooks() << std::endl;
+        // std::cout << "DEBUG | Refill time: " << Parsing::get().getRefillTime() << std::endl;
+        this->loop(multiplierCooking, numChefs, restockTime);
     }
 
     void Core::usage(std::string filename)
     {
-        std::cout << "Usage: " + filename + " [-h|--help] [MultipierTime] [NbCooks] [RefillTime]" << std::endl;
+        std::cout << "USAGE\n\t" + filename + " [MultipierTime] [NbCooks] [RefillTime]" << std::endl;
     }
 
-    void Core::run(void)
+    void Core::loop(double multiplierCooking, int numChefs, int restockTime)
     {
-        std::string input;
+        Plazza::Reception reception(multiplierCooking, numChefs, restockTime);
 
-        while (std::getline(std::cin, input)) {
-            std::cout << "> ";
-            try {
-                std::cout << "DEBUG" << input << std::endl;
-                Manager::getInstance().receiveOrder(input);
-            } catch (const std::exception& e) {
-                std::cerr << "Invalid command. (TEST)" << e.what() << std::endl;
-            }
-        }
+        reception.run();
     }
 
     std::string Core::str() const

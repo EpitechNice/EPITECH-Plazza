@@ -29,6 +29,7 @@
     #include <map>
     #include <memory>
     #include <ostream>
+    #include <regex>
     #include <sstream>
     #include <string>
     #include <sys/stat.h>
@@ -37,6 +38,11 @@
     #include <unistd.h>
     #include <utility>
     #include <vector>
+    #include <chrono>
+    #include <thread>
+    #include <mutex>
+    #include <sys/wait.h>
+    #include <signal.h>
 
 namespace fs = std::filesystem;
 

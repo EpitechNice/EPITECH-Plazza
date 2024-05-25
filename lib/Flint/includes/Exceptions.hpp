@@ -30,6 +30,8 @@ namespace Flint::Exceptions
     {
         protected:
             std::string _what;
+            std::string _pretty;
+            std::string _className;
             std::pair<std::pair<std::string, std::size_t>, std::string> _infos;
         public:
             Exception(std::string what = "An exception occured !",
@@ -38,6 +40,7 @@ namespace Flint::Exceptions
             std::pair<std::pair<std::string, std::size_t>, std::string> getInfos() const;
             std::string getClassNameFromStackTrace(const std::vector<std::pair<std::string, std::size_t>>& stackTrace) const;
             std::string show(std::pair<std::pair<std::string, std::size_t>, std::string> infos) const;
+            std::string display() const;
             const char* what() const noexcept override;
             friend std::ostream& operator<<(std::ostream& os, const Exceptions::Exception& obj);
     };
@@ -90,7 +93,25 @@ namespace Flint::Exceptions
     class WriteError: public Flint::Exceptions::Exception
     {
         public:
-            WriteError(std::string what = "Error while wrtiting to file.",
+            WriteError(std::string what = "Error while writing to file.",
+                              std::pair<std::pair<std::string, std::size_t>, std::string> infos = {{"", 0}, ""}):
+                Exception(what, infos)
+            {}
+    };
+
+    class InvalidCommandError: public Flint::Exceptions::Exception
+    {
+        public:
+            InvalidCommandError(std::string what = "Command does not exists",
+                              std::pair<std::pair<std::string, std::size_t>, std::string> infos = {{"", 0}, ""}):
+                Exception(what, infos)
+            {}
+    };
+
+    class NotFoundError: public Flint::Exceptions::Exception
+    {
+        public:
+            NotFoundError(std::string what = "Requested ressource could not be found",
                               std::pair<std::pair<std::string, std::size_t>, std::string> infos = {{"", 0}, ""}):
                 Exception(what, infos)
             {}

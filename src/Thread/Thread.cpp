@@ -1,11 +1,10 @@
-/* ------------------------------------------------------------------------------------ *
- *                                                                                      *
- * EPITECH PROJECT - Tue, May, 2024                                                     *
- * Title           - Plazza                                                             *
+/*                                                                                      *
+ * EPITECH PROJECT - Sun, May, 2024                                                     *
+ * Title           - EPITECH-Plazza                                                     *
  * Description     -                                                                    *
- *     Protocol                                                                         *
+ *     Thread                                                                           *
  *                                                                                      *
- * ------------------------------------------------------------------------------------ *
+ * -----------------------------------------------------------------------------------  *
  *                                                                                      *
  *       ▄▀▀█▄▄▄▄  ▄▀▀▄▀▀▀▄  ▄▀▀█▀▄    ▄▀▀▀█▀▀▄  ▄▀▀█▄▄▄▄  ▄▀▄▄▄▄   ▄▀▀▄ ▄▄             *
  *      ▐  ▄▀   ▐ █   █   █ █   █  █  █    █  ▐ ▐  ▄▀   ▐ █ █    ▌ █  █   ▄▀            *
@@ -15,38 +14,37 @@
  *       █    ▐   █         █       █ █          █    ▐   █     ▐   █   █               *
  *       ▐        ▐         ▐       ▐ ▐          ▐        ▐         ▐   ▐               *
  *                                                                                      *
- * ------------------------------------------------------------------------------------ */
+ * -----------------------------------------------------------------------------------  */
 
-#ifndef INCLUDED_PROTOCOL_HPP
-    #define INCLUDED_PROTOCOL_HPP
-
-    #include "includes.hpp"
+#include "Thread.hpp"
 
 namespace Plazza
 {
-    class Protocol: Flint::Inspection<Protocol>
+    Thread::Thread()
     {
-        private:
-            int _file;
-            std::string _name;
-            size_t _readSize;
+        this->_running = false;
+    }
 
-        public:
-            Protocol();
-            Protocol(const std::string& filename);
-            ~Protocol();
+    Thread::~Thread()
+    {
+        if (this->_running)
+            join();
+    }
 
-            std::string Read(size_t size);
-            void Write(std::string data);
+    void Thread::start(void (*function)(void))
+    {
+        if (!this->_running) {
+            this->_running = true;
+            this->_thread = std::thread(function);
+        }
+    }
 
-            const std::string& getName() const;
-            size_t getReadSize() const;
-            void setReadSize(size_t size);
+    void Thread::join()
+    {
+        if (this->_running && this->_thread.joinable()) {
+            this->_thread.join();
+            this->_running = false;
+        }
+    }
 
-            friend std::ostream& operator<<(std::ostream& os, Protocol& obj);
-
-            std::string str() const;
-    };
 }
-
-#endif
