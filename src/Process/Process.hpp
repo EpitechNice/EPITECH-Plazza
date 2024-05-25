@@ -35,7 +35,7 @@ namespace Plazza
 
         public:
             Process();
-            ~Process() = default;
+            ~Process();
 
             void create(void);
             void wait(void);

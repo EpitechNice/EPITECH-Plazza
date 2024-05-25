@@ -29,7 +29,7 @@ namespace Plazza
 
         public:
             Thread();
-            ~Thread() = default;
+            ~Thread();
 
             void start(void (*function)(void));
             void join(void);
