@@ -14,11 +14,11 @@
  *                                                                                      *
  * -----------------------------------------------------------------------------------  */
 
-#ifndef KITCHEN_HPP
-    #define KITCHEN_HPP
+#ifndef OLD_KITCHEN_HPP
+    #define OLD_KITCHEN_HPP
 
     #include "includes.hpp"
-    #include "../Chef/Chef.hpp"
+    #include "../_OldChef/OldChef.hpp"
     #include "../Process/Process.hpp"
     #include "../Protocol/PizzaPool.hpp"
 

@@ -22,6 +22,7 @@
     #include "includes.hpp"
     #include "../Chef/Chef.hpp"
     #include "../Process/Process.hpp"
+    #include "../Mutex/Mutex.hpp"
 
 namespace Plazza
 {
@@ -29,7 +30,6 @@ namespace Plazza
     {
         private:
             bool _running;
-            // Plazza::Process _process;
 
             double _multiplierCooking;
             int _restockTime;
@@ -48,11 +48,11 @@ namespace Plazza
                 {Plazza::Ingredients::Steak, 5},
             };
 
-            std::mutex _isOver;
+            Mutex _mutex;
 
         public:
             Kitchen(double multiplierCooking, int numChefs, int restockTime);
-            ~Kitchen() = default;
+            ~Kitchen();
 
 
             bool isAvailable(const std::map<Ingredients, int>& requiredIngredients);

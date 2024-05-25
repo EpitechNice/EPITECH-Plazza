@@ -45,7 +45,7 @@ namespace Plazza
             void askForPizza(std::pair<Plazza::PizzaType, Plazza::PizzaSize> pizza);
             std::pair<Plazza::PizzaType, Plazza::PizzaSize> getPizzaDone();
 
-            std::string str() const;
+            // std::string str() const;
     };
 }
 

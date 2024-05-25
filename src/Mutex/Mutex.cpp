@@ -1,8 +1,8 @@
 /*                                                                                      *
- * EPITECH PROJECT - Sun, May, 2024                                                     *
+ * EPITECH PROJECT - Mon, May, 2024                                                     *
  * Title           - EPITECH-Plazza                                                     *
  * Description     -                                                                    *
- *     Thread                                                                           *
+ *     Mutex                                                                            *
  *                                                                                      *
  * -----------------------------------------------------------------------------------  *
  *                                                                                      *
@@ -14,27 +14,27 @@
  *                                                                                      *
  * -----------------------------------------------------------------------------------  */
 
-#ifndef THREAD_HPP
-    #define THREAD_HPP
-
-    #include "includes.hpp"
+#include "Mutex.hpp"
 
 namespace Plazza
 {
-    class Thread
+    Mutex::Mutex()
+    {}
+
+    void Mutex::lock()
     {
-        private:
-            std::thread _thread;
-            bool _running;
+        this->_mutex.lock();
+    }
 
-        public:
-            Thread();
-            ~Thread();
+    void Mutex::unlock()
+    {
+        this->_mutex.unlock();
+    }
 
-            void start(void (*function)(void));
-            void join(void);
+    std::mutex& Mutex::getMutex()
+    {
+        return this->_mutex;
+    }
 
-    };
 }
 
-#endif

@@ -35,19 +35,20 @@ namespace Plazza
 
         public:
             Chef(std::size_t id);
-            ~Chef();
+            ~Chef() = default;
 
             static void run(Chef* self);
 
             void start();
             void stop();
 
-            std::string getType(Plazza::PizzaType type) const;
-            std::string getSize(Plazza::PizzaSize size) const;
-
-
             void addPizza(std::pair<Plazza::PizzaType, Plazza::PizzaSize> pizza);
             bool isAvailable() const;
+            std::string getType(Plazza::PizzaType type) const;
+            std::string getSize(Plazza::PizzaSize size) const;
+            int getId() const;
+
+
     };
 }
 

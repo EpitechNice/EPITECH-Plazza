@@ -16,8 +16,8 @@
  *                                                                                      *
  * -----------------------------------------------------------------------------------  */
 
-#ifndef CHEF_HPP
-    #define CHEF_HPP
+#ifndef OLD_CHEF_HPP
+    #define OLD_CHEF_HPP
 
     #include "includes.hpp"
     #include "../Protocol/PizzaPool.hpp"

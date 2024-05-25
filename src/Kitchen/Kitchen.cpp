@@ -21,12 +21,12 @@ namespace Plazza
 {
     Kitchen::Kitchen(double multiplierCooking, int numChefs, int restockTime)
     {
-        this->_isOver.lock();
         this->_multiplierCooking = multiplierCooking;
         this->_restockTime = restockTime;
         for (int i = 0; i < numChefs; i++) {
             this->_chefs.push_back(std::make_shared<Plazza::Chef>(i));
         }
+        std::lock_guard<std::mutex> lock(this->_mutex.getMutex());
     }
 
     Kitchen::~Kitchen()
@@ -34,9 +34,9 @@ namespace Plazza
 
     bool Kitchen::isAvailable(const std::map<Ingredients, int>& requiredIngredients)
     {
-        std::lock_guard<std::mutex> lock(this->_mutex);
-        if (this->_toClose)
-            return false;
+        std::lock_guard<std::mutex> lock(this->_mutex.getMutex());
+        // if (this->_toClose)
+        //     return false;
         bool enoughIngredients = true;
 
         for (const auto& ingredient : requiredIngredients) {
@@ -93,7 +93,7 @@ namespace Plazza
 
     void Kitchen::waitDeath()
     {
-        this->_isOver.lock();
+        std::lock_guard<std::mutex> lock(this->_mutex.getMutex());
     }
 }
 

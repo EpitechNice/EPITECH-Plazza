@@ -31,6 +31,7 @@ add_executable(plazza
     src/Process/Process.cpp
     src/Thread/Thread.cpp
     src/Protocol/PizzaPool.cpp
+    src/Mutex/Mutex.cpp
     src/Main.cpp
 )
 
