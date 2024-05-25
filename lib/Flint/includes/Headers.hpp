@@ -21,6 +21,7 @@
     #include <algorithm>
     #include <cmath>
     #include <cxxabi.h>
+    #include <deque>
     #include <exception>
     #include <ext/stdio_filebuf.h>
     #include <filesystem>

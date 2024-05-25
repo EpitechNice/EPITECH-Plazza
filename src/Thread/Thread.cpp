@@ -28,7 +28,7 @@ namespace Plazza
     Thread::~Thread()
     {
         if (this->_running)
-            join();
+            this->join();
     }
 
     void Thread::start(void (*function)(void))

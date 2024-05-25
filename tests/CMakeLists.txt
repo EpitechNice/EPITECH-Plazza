@@ -38,7 +38,7 @@ add_executable(plazza-test
     src/Kitchen/Kitchen.cpp
     src/Manager/Manager.cpp
     src/Parsing/Parsing.cpp
-    src/Protocol/Protocol.cpp
+    src/PizzaPool/PizzaPool.cpp
     src/Reception/Reception.cpp
     tests.cpp
 )

@@ -35,11 +35,12 @@ namespace Plazza
 
         public:
             Process();
-            ~Process();
+            ~Process() = default;
 
-            void create(void);
             void wait(void);
             void killPid(void);
+
+            processType getType() const;
     };
 }
 

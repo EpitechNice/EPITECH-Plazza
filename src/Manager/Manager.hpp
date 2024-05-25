@@ -19,6 +19,7 @@
 
     #include "includes.hpp"
     #include "../Kitchen/Kitchen.hpp"
+    #include "../Process/Process.hpp"
 
 namespace Plazza
 {
@@ -37,6 +38,8 @@ namespace Plazza
 
             bool receiveOrder(const std::string& order);
             void manageKitchens();
+
+            void createKitchen(void);
             void preparePizza(const std::string& pizza);
             void displayStatus();
 

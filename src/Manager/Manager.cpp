@@ -71,6 +71,17 @@ namespace Plazza
         }
     }
 
+    void Manager::createKitchen(void)
+    {
+        Plazza::Process _process;
+        // pid_t pid = _process.create();
+// 
+        // if (_process.getType() == Plazza::processType::CHILD)
+            // auto firstKitchen = std::make_shared<Kitchen>(this->_multiplierCooking, this->_numChefs, this->_restockTime);
+            // this->_kitchenList.push_back(firstKitchen);
+        
+    }
+
     void Manager::stringToLower(std::string& str) const
     {
         for (std::size_t i = 0; i < str.size(); i++)
@@ -103,15 +114,11 @@ namespace Plazza
         std::size_t quantity = std::stoul(tokens[2].substr(1));
         size_t kitchenCount = this->_kitchenList.size();
 
-        // std::size_t pizzasPerKitchen = 0;
-        // std::size_t remainingPizzas  = quantity;
-
         if (!kitchenCount) {
             auto firstKitchen = std::make_shared<Kitchen>(this->_multiplierCooking, this->_numChefs, this->_restockTime);
             this->_kitchenList.push_back(firstKitchen);
             kitchenCount++;
         }
-
 
         std::size_t pizzasPerKitchen = quantity / kitchenCount;
         std::size_t remainingPizzas  = quantity % kitchenCount;
@@ -164,68 +171,6 @@ namespace Plazza
             }
         }
     }
-
-                                        // std::string name;
-                                // std::string size;
-                                // int quantity = 1;
-                                // int multiplier;
-                                // std::stringstream ss(pizza);
-                                // std::map<Ingredients, int> requiredIngredients = {{Ingredients::Dough, 0}};
-                                // bool pizzaPrepared = false;
-
-                                // if (name == "Margarita") {
-                                //     requiredIngredients = {{Ingredients::Dough, 1}, {Ingredients::Tomato, 1}, {Ingredients::Gruyere, 1}};
-                                // } else if (name == "Regina") {
-                                //     requiredIngredients = {{Ingredients::Dough, 1}, {Ingredients::Tomato, 1}, {Ingredients::Gruyere, 1}, {Ingredients::Ham, 1}, {Ingredients::Mushrooms, 1}};
-                                // } else if (name == "Americana") {
-                                //     requiredIngredients = {{Ingredients::Dough, 1}, {Ingredients::Tomato, 1}, {Ingredients::Gruyere, 1}, {Ingredients::Steak, 1}};
-                                // } else if (name == "Fantasia") {
-                                //     requiredIngredients = {{Ingredients::Dough, 1}, {Ingredients::Tomato, 1}, {Ingredients::Gruyere, 1}, {Ingredients::Eggplant, 1}, {Ingredients::GoatCheese, 1}, {Ingredients::ChiefLove, 1}};
-                                // } else {
-                                //     std::cout << "\tReception Manager : Unknown pizza type." << std::endl;
-                                //     return;
-                                // }
-
-        // TODO : Is ok : quantity balanced here
-        // size_t kitchenCount = kitchens.size();
-        // int pizzasPerKitchen = quantity / kitchenCount;
-        // int remainingPizzas = quantity % kitchenCount;
-    
-        // // Répartition initiale des pizzas entre les cuisines disponibles
-        // for (int i = 0; i < kitchenCount; ++i) {
-        //     auto& kitchen = kitchens[i];
-        //     for (int j = 0; j < pizzasPerKitchen; ++j) {
-        //         if (kitchen->isAvailable(requiredIngredients)) {
-        //             kitchen->preparePizza(name, size, multiplier);
-        //             --quantity;
-        //         }
-        //     }
-        // }
-    
-        // // Répartir les pizzas restantes
-        // for (int i = 0; i < remainingPizzas; ++i) {
-        //     for (auto& kitchen : kitchens) {
-        //         if (kitchen->isAvailable(requiredIngredients)) {
-        //             kitchen->preparePizza(name, size);
-        //             quantity--;
-        //             break;
-        //         }
-        //     }
-        // }
-
-        // while (quantity > 0) {
-        //     auto newKitchen = std::make_shared<Kitchen>(numChefs);
-        //     kitchens.push_back(newKitchen);
-        //     bool kitchenAvailable = true;
-        //     while (kitchenAvailable && quantity > 0) {
-        //         if (newKitchen->isAvailable(requiredIngredients)) {
-        //             newKitchen->preparePizza(name, size);
-        //             quantity--;
-        //         } else {
-        //             kitchenAvailable = false;
-        //         }
-        //     }
-        // }
 
     void Manager::setNumChefs(int num)
     {

@@ -24,14 +24,14 @@ namespace Plazza
         this->_isBaking = false;
     }
 
-//TODO : Serveur
+//TODO : Clock
     void Chef::cook(const std::string& name, const std::string& size, int cookingTime)
     {
         while (this->_isBaking)
             std::this_thread::sleep_for(std::chrono::seconds(1));
         this->_isBaking = true;
         std::cout << "\tThe Cook " << this->_id << " is preparing a pizza " << name << " of size " << size << "..." << std::endl;
-        std::this_thread::sleep_for(std::chrono::milliseconds(cookingTime));
+        std::this_thread::sleep_for(std::chrono::milliseconds(cookingTime * 1000));
         std::cout << "\tPizza " << name << " of size " << size << " was prepared by Cook " << this->_id << std::endl;
         this->_numPizzasInProgress--;
         this->_isBaking = false;

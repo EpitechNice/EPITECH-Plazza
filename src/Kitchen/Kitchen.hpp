@@ -54,6 +54,7 @@ namespace Plazza
         private:
             std::mutex _mutex;
             std::thread _monitorThread;
+            pid_t _pid;
 
             double _multiplierCooking;
             std::vector<Chef> _chefs;

@@ -116,6 +116,24 @@ namespace Flint::Exceptions
                 Exception(what, infos)
             {}
     };
+
+    class ForkFailedError: public Flint::Exceptions::Exception
+    {
+        public:
+            ForkFailedError(std::string what = "Error while running fork",
+                              std::pair<std::pair<std::string, std::size_t>, std::string> infos = {{"", 0}, ""}):
+                Exception(what, infos)
+            {}
+    };
+
+    class InvalidReturnCodeError: public Flint::Exceptions::Exception
+    {
+        public:
+            InvalidReturnCodeError(std::string what = "Return code was not equal to 0",
+                              std::pair<std::pair<std::string, std::size_t>, std::string> infos = {{"", 0}, ""}):
+                Exception(what, infos)
+            {}
+    };
 }
 
 #endif
