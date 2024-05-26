@@ -19,6 +19,7 @@
 
     #include "includes.hpp"
     #include "../Mutex/Mutex.hpp"
+    #include "../Thread/Thread.hpp"
 
 namespace Plazza
 {
@@ -31,7 +32,7 @@ namespace Plazza
 
             bool _keepRunning;
 
-            std::thread _thread;
+            Plazza::SelfThread<Chef> _thread;
 
             std::pair<Plazza::PizzaType, Plazza::PizzaSize> _currentPizza;
             std::pair<Plazza::PizzaType, Plazza::PizzaSize> _nextPizza;

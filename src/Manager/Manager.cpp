@@ -218,8 +218,6 @@ namespace Plazza
         }
     }
 
-
-
     std::vector<std::string> Manager::strToWordArrayOnSteroid(const std::string& str, const std::string& delims) const
     {
         std::vector<std::string> output;

@@ -22,7 +22,7 @@ namespace Plazza
     Chef::Chef(int id):
         _id(id), _numPizzasInProgress(0), _keepRunning(true)
     {
-        this->_thread = std::thread(Chef::runThread, this);
+        this->_thread.start(Chef::runThread, this);
     }
 
     void Chef::cook(const std::string& name, const std::string& size, int cookingTime)

@@ -30,7 +30,7 @@ namespace Plazza
         private:
             Plazza::Mutex _mutex;
             Plazza::Mutex _keepRunnin;
-            std::thread _monitorThread;
+            Plazza::SelfThread<Kitchen> _monitorThread;
 
             double _multiplierCooking;
             std::vector<std::shared_ptr<Plazza::Chef>> _chefs;
@@ -57,7 +57,7 @@ namespace Plazza
 
             std::size_t _nbPizzaKitchen;
 
-            void monitorActivity();
+            static void monitorActivity(Kitchen* self);
 
         public:
             Kitchen(double multiplierCooking, int numChefs, int restockTime);

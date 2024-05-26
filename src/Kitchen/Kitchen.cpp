@@ -75,7 +75,7 @@ namespace Plazza
                 chef->takeOrder();
                 std::thread([=]() {
                     chef->cook(name, size, cookingTime);
-                    }).detach();
+                    }).detach(); // One time thread, no need for encapsulation
                 this->_nbPizzaKitchen++;
                 pizzaAssigned = true;
                 break;
@@ -148,17 +148,17 @@ namespace Plazza
         self->_ingredientsStock[Ingredients::Steak] += 1;
     }
 
-    void Kitchen::monitorActivity()
+    void Kitchen::monitorActivity(Kitchen* self)
     {
         std::size_t value;
-        while (this->_running && !this->_toClose) {
-            value = this->_nbPizzaKitchen;
+        while (self->_running && !self->_toClose) {
+            value = self->_nbPizzaKitchen;
             std::this_thread::sleep_for(std::chrono::seconds(5));
-            if (value == this->_nbPizzaKitchen) {
+            if (value == self->_nbPizzaKitchen) {
                 std::cout << "\rNo pizza done for 5 secs. Exiting...\n> " << std::flush;
-                this->_keepRunnin.unlock();
-                this->_toClose = true;
-                this->_running = false;
+                self->_keepRunnin.unlock();
+                self->_toClose = true;
+                self->_running = false;
             }
         }
     }
@@ -176,7 +176,7 @@ namespace Plazza
 
     void Kitchen::startMonitoring()
     {
-        this->_monitorThread = std::thread(&Kitchen::monitorActivity, this);
+        this->_monitorThread.start(Kitchen::monitorActivity, this);
     }
 
     void Kitchen::stopMonitoring()

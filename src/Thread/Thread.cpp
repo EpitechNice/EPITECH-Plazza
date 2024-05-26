@@ -46,4 +46,8 @@ namespace Plazza
         }
     }
 
+    bool Thread::joinable() const
+    {
+        return this->_thread.joinable();
+    }
 }
