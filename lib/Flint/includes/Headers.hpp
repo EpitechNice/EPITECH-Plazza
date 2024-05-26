@@ -45,6 +45,9 @@
     #include <mutex>
     #include <sys/wait.h>
     #include <signal.h>
+    #include <sys/mman.h>
+    #include <fcntl.h>
+    #include <cstring>
 
 namespace fs = std::filesystem;
 
