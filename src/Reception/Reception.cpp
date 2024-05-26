@@ -24,7 +24,6 @@ namespace Plazza
     Reception::Reception(double multiplierCooking, int numChefs, int restockTime)
     {
         this->_manager = std::make_shared<Manager>(multiplierCooking, numChefs, restockTime);
-        // std::cout << "DEBUG | Manager : " << this->_manager->str() << std::endl;
     }
 
     void Reception::run() {

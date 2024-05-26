@@ -27,7 +27,7 @@ namespace Plazza
         this->_restockTime = restockTime;
         this->_pizzaPool = std::make_shared<Plazza::PizzaPool>();
     }
-//TODO : Review exception if grammatically invalid order
+
     bool Manager::receiveOrder(const std::string& order)
     {
         std::vector<std::string> tokens = this->strToWordArrayOnSteroid(order, " \t");
@@ -55,47 +55,57 @@ namespace Plazza
         return true;
     }
 
-    void Manager::manageKitchens()
-    {
-        // const auto waitTime = std::chrono::milliseconds(this->_restockTime);
+    void Manager::manageKitchens() {
+        const auto waitTime = std::chrono::milliseconds(this->_restockTime);
 
-        // for (auto kitchen = _kitchenList.begin(); kitchen != _kitchenList.end();) {
-        //     if ((kitchen->get())->getClose()) {
-        //         kitchen = _kitchenList.erase(kitchen);
-        //         continue;
-        //     }
-        //     if ((kitchen->get())->checkIngredients() == 1) {
-        //         std::this_thread::sleep_for(waitTime);
-        //         (kitchen->get())->restockIngredients();
-        //     }
-        //     kitchen++;
+        // for (auto kitchen = this->_kitchenList.begin(); kitchen!= this->_kitchenList.end();) {
+            // if (kitchen->get())->getClose()) {
+            //     kitchen = this->_kitchenList.erase(kitchen);
+            //     continue;
+            // }
+            // if (kitchen->get())->checkIngredients() == 1) {
+            //     std::this_thread::sleep_for(waitTime);
+            //     kitchen->get()->restockIngredients();
+            // }
         // }
     }
 
     void Manager::createKitchen(void)
     {
         std::shared_ptr<Plazza::Process> process = std::make_shared<Plazza::Process>();
-
         if (process->getType() == Plazza::processType::CHILD) {
-            std::shared_ptr<Kitchen> newKitchen = std::make_shared<Kitchen>(this->_multiplierCooking, this->_numChefs, this->_restockTime);
+            std::shared_ptr<Plazza::Kitchen> newKitchen = std::make_shared<Kitchen>(this->_multiplierCooking, this->_numChefs, this->_restockTime);
             this->_kitchenList.push_back(newKitchen);
             newKitchen->waitDeath();
-            auto pos = std::find(this->_kitchenList.begin(), this->_kitchenList.end(), newKitchen);
-            if (pos == this->_kitchenList.end())
-                std::exit(1);
-            this->_kitchenList.erase(pos);
-            std::exit(0);
+        } else if (process->getType() == Plazza::processType::CHILD) {
+            this->_processList.push_back(process);
         }
-        this->_processList.push_back(process);
-        // process.killPid();
-        // else {
-            // std::shared_ptr<Kitchen> newKitchen = std::make_shared<Kitchen>(this->_multiplierCooking, this->_numChefs, this->_restockTime);
-            // this->_kitchenList.push_back(newKitchen);
-        // }
-
-        // if (_process.getType() == Plazza::processType::CHILD)
-            // auto firstKitchen = std::make_shared<Kitchen>(this->_multiplierCooking, this->_numChefs, this->_restockTime);
     }
+
+    // void Manager::createKitchen(void)
+    // {
+    //     std::shared_ptr<Plazza::Process> process = std::make_shared<Plazza::Process>();
+
+    //     if (process->getType() == Plazza::processType::CHILD) {
+    //         std::shared_ptr<Kitchen> newKitchen = std::make_shared<Kitchen>(this->_multiplierCooking, this->_numChefs, this->_restockTime);
+    //         this->_kitchenList.push_back(newKitchen);
+    //         newKitchen->waitDeath();
+    //         auto pos = std::find(this->_kitchenList.begin(), this->_kitchenList.end(), newKitchen);
+    //         if (pos == this->_kitchenList.end())
+    //             std::exit(1);
+    //         this->_kitchenList.erase(pos);
+    //         std::exit(0);
+    //     }
+    //     this->_processList.push_back(process);
+    //     // process.killPid();
+    //     // else {
+    //         // std::shared_ptr<Kitchen> newKitchen = std::make_shared<Kitchen>(this->_multiplierCooking, this->_numChefs, this->_restockTime);
+    //         // this->_kitchenList.push_back(newKitchen);
+    //     // }
+
+    //     // if (_process.getType() == Plazza::processType::CHILD)
+    //         // auto firstKitchen = std::make_shared<Kitchen>(this->_multiplierCooking, this->_numChefs, this->_restockTime);
+    // }
 
     void Manager::stringToLower(std::string& str) const
     {
@@ -126,18 +136,18 @@ namespace Plazza
         if (!std::regex_match(tokens[2], third_token))
             throw_exception(Flint::Exceptions::InvalidCommandError, "Third token of the order does not match regex !");
 
-        // std::size_t quantity = std::stoul(tokens[2].substr(1));
+        std::size_t quantity = std::stoul(tokens[2].substr(1));
         size_t kitchenCount = this->_kitchenList.size();
 
         if (!kitchenCount) {
-            // auto firstKitchen = std::make_shared<Kitchen>(this->_multiplierCooking, this->_numChefs, this->_restockTime);
-            this->createKitchen();
-            // this->_kitchenList.push_back(firstKitchen);
+            auto newKitchen = std::make_shared<Kitchen>(this->_multiplierCooking, this->_numChefs, this->_restockTime);
+            this->_kitchenList.push_back(newKitchen);
+            // this->createKitchen();
             kitchenCount++;
         }
 
-        // std::size_t pizzasPerKitchen = quantity / kitchenCount;
-        // std::size_t remainingPizzas  = quantity % kitchenCount;
+        std::size_t pizzasPerKitchen = quantity / kitchenCount;
+        std::size_t remainingPizzas  = quantity % kitchenCount;
 
         std::map<Ingredients, int> requiredIngredients = {};
         if (tokens[0] == "margarita") {
@@ -153,39 +163,40 @@ namespace Plazza
             return;
         }
 
-        // for (std::size_t i = 0; i < kitchenCount; ++i) {
-        //     auto& kitchen = this->_kitchenList[i];
-        //     for (std::size_t j = 0; j < pizzasPerKitchen; ++j) {
-        //         if (kitchen->isAvailable(requiredIngredients)) {
-        //             kitchen->preparePizza(tokens[0], tokens[1]);
-        //             --quantity;
-        //         }
-        //     }
-        // }
+        for (std::size_t i = 0; i < kitchenCount; i++) {
+            auto& kitchen = this->_kitchenList[i];
+            for (std::size_t j = 0; j < pizzasPerKitchen; j++) {
+                if (kitchen->isAvailable(requiredIngredients)) {
+                    kitchen->preparePizza(tokens[0], tokens[1]);
+                    quantity--;
+                }
+            }
+        }
 
-        // for (std::size_t i = 0; i < remainingPizzas; ++i) {
-        //     for (auto& kitchen : this->_kitchenList) {
-        //         if (kitchen->isAvailable(requiredIngredients)) {
-        //             kitchen->preparePizza(tokens[0], tokens[1]);
-        //             quantity--;
-        //             break;
-        //         }
-        //     }
-        // }
+        for (std::size_t i = 0; i < remainingPizzas; i++) {
+            for (auto& kitchen : this->_kitchenList) {
+                if (kitchen->isAvailable(requiredIngredients)) {
+                    kitchen->preparePizza(tokens[0], tokens[1]);
+                    quantity--;
+                    break;
+                }
+            }
+        }
 
-        // while (quantity > 0) {
-        //     auto newKitchen = std::make_shared<Kitchen>(this->_multiplierCooking, this->_numChefs, this->_restockTime);
-        //     this->_kitchenList.push_back(newKitchen);
-        //     bool kitchenAvailable = true;
-        //     while (kitchenAvailable && quantity > 0) {
-        //         if (newKitchen->isAvailable(requiredIngredients)) {
-        //             newKitchen->preparePizza(tokens[0], tokens[1]);
-        //             quantity--;
-        //         } else {
-        //             kitchenAvailable = false;
-        //         }
-        //     }
-        // }
+        while (quantity > 0) {
+            auto newKitchen = std::make_shared<Kitchen>(this->_multiplierCooking, this->_numChefs, this->_restockTime);
+            this->_kitchenList.push_back(newKitchen);
+            bool kitchenAvailable = true;
+            while (kitchenAvailable && quantity > 0) {
+                if (newKitchen->isAvailable(requiredIngredients)) {
+                    newKitchen->preparePizza(tokens[0], tokens[1]);
+                    quantity--;
+                } else {
+                    kitchenAvailable = false;
+                }
+            }
+        }
+
     }
 
     void Manager::setNumChefs(int num)
