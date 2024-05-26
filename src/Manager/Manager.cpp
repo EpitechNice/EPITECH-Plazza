@@ -71,7 +71,6 @@ namespace Plazza
     void Manager::manageKitchens()
     {
         for (auto kitchen = this->_kitchenList.begin(); kitchen!= this->_kitchenList.end(); ++kitchen) {
-            std::cout << *kitchen->get() << std::endl;
             kitchen->get()->restockIngredients();
         }
         this->closeKitchens();
