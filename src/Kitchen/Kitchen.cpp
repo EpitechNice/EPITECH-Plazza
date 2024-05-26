@@ -141,15 +141,16 @@ namespace Plazza
     void Kitchen::restockIngredients()
     {
         std::chrono::milliseconds sleepTime(this->_restockTime);
-
-        std::thread(Kitchen::_restockIngredients, this, sleepTime);
+        _restockIngredients(this, sleepTime);
     }
 
     void Kitchen::_restockIngredients(Kitchen* self, std::chrono::milliseconds sleepTime)
     {
         std::this_thread::sleep_for(sleepTime);
-
         std::lock_guard<Plazza::Mutex> lock(self->_mutex);
+        if (self->_ingredientsStock[Ingredients::Dough] > 4 )
+            return;
+        self->_ingredientsStock[Ingredients::Dough] += 1;
         self->_ingredientsStock[Ingredients::Dough] += 1;
         self->_ingredientsStock[Ingredients::Tomato] += 1;
         self->_ingredientsStock[Ingredients::Gruyere] += 1;
