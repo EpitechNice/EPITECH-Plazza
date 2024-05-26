@@ -17,7 +17,6 @@
  * -----------------------------------------------------------------------------------  */
 
 #include "Manager.hpp"
-#include "Process.hpp"
 
 namespace Plazza
 {
@@ -85,6 +84,7 @@ namespace Plazza
         } catch (const Flint::Exceptions::Exception& e) {
             std::cout << e.show(__POSITION_INFOS__) << std::endl;
         }
+
         std::shared_ptr<Plazza::Process> process = std::make_shared<Plazza::Process>();
 
         if (process->getType() == Plazza::processType::CHILD) {
@@ -92,18 +92,28 @@ namespace Plazza
             this->_kitchenListAccess.lock();
             this->_kitchenList.push_back(newKitchen);
             this->_kitchenListAccess.unlock();
-
             newKitchen->waitDeath();
-
+            std::cout << "Gné finiiii" << std::endl;
             this->_kitchenListAccess.lock();
             auto pos = std::find(this->_kitchenList.begin(), this->_kitchenList.end(), newKitchen);
-            if (pos != this->_kitchenList.end()) {
-                this->_kitchenList.erase(pos);
+            if (pos == this->_kitchenList.end()) {
+                this->_kitchenListAccess.unlock();
+                std::exit(1);
             }
+            this->_kitchenList.erase(pos);
             this->_kitchenListAccess.unlock();
+            std::cout << "Kitchen size: " << this->_kitchenList.size() << std::endl;
+            std::exit(0);
         }
-
         this->_processList.push_back(process);
+        // process.killPid();
+        // else {
+            // std::shared_ptr<Kitchen> newKitchen = std::make_shared<Kitchen>(this->_multiplierCooking, this->_numChefs, this->_restockTime);
+            // this->_kitchenList.push_back(newKitchen);
+        // }
+
+        // if (_process.getType() == Plazza::processType::CHILD)
+            // auto firstKitchen = std::make_shared<Kitchen>(this->_multiplierCooking, this->_numChefs, this->_restockTime);
     }
 
     void Manager::stringToLower(std::string& str) const
