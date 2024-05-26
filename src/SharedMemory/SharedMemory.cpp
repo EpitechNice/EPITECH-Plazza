@@ -36,7 +36,7 @@ namespace Plazza
 
     void SharedMemory::updateData(SharedData& newData)
     {
-        memcpy(this->_pool, &newData, this->_size);
+        *this->_pool = newData;
     }
 
     Plazza::SharedData* SharedMemory::getData() const
