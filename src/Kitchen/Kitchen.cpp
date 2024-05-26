@@ -65,6 +65,16 @@ namespace Plazza
         return enoughIngredients;
     }
 
+    void Kitchen::reducIngredients(const std::map<Ingredients, int>& ingredients)
+    {
+        for (const auto& ingredient : ingredients) {
+            auto it = this->_ingredientsStock.find(ingredient.first);
+            if (it != this->_ingredientsStock.end()) {
+                it->second -= ingredient.second;
+            }
+        }
+    }
+
     bool Kitchen::preparePizza(std::string name, std::string size)
     {
         std::cout << "\tPreparing pizza " << name << " of size " << size << "..." << std::endl;
@@ -162,6 +172,7 @@ namespace Plazza
                 std::cout << "\rNo pizza done for 5 secs. Exiting...\n> " << std::flush;
                 this->_keepRunnin.unlock();
                 this->_toClose = true;
+                this->_running = false;
             }
 
             // if (this->checkCooksStatus() == 1) {
@@ -185,6 +196,18 @@ namespace Plazza
             // }
         }
     }
+
+    bool Kitchen::shouldClose() const {
+        return this->_toClose;
+    }
+
+    void Kitchen::stop() {
+        this->_running = false;
+        if (this->_monitorThread.joinable()) {
+            this->_monitorThread.join();
+        }
+    }
+
 
     void Kitchen::startMonitoring()
     {

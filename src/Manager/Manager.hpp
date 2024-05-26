@@ -42,6 +42,7 @@ namespace Plazza
             ~Manager() = default;
 
             bool receiveOrder(const std::string& order);
+            void closeKitchens();
             void manageKitchens();
 
             void createKitchen(void);

@@ -55,14 +55,26 @@ namespace Plazza
         return true;
     }
 
+    void Manager::closeKitchens()
+    {
+        std::lock_guard<Plazza::Mutex> lock(this->_kitchenListAccess);
+        for (auto it = this->_kitchenList.begin(); it != this->_kitchenList.end();) {
+            if ((*it)->shouldClose()) {
+                (*it)->stop();
+                it = this->_kitchenList.erase(it);
+            } else {
+                ++it;
+            }
+        }
+    }
+
     void Manager::manageKitchens()
     {
         for (auto kitchen = this->_kitchenList.begin(); kitchen!= this->_kitchenList.end(); ++kitchen) {
             std::cout << *kitchen->get() << std::endl;
-            if ((kitchen->get())->checkIngredients()) {
-                kitchen->get()->restockIngredients();
-            }
+            kitchen->get()->restockIngredients();
         }
+        this->closeKitchens();
     }
 
     void Manager::createKitchen(void)
@@ -167,6 +179,7 @@ namespace Plazza
                     std::cout << "\tKitchen available, preparing pizza..." << std::endl;
                     if (!kitchen->preparePizza(tokens[0], tokens[1]))
                         continue;
+                    kitchen->reducIngredients(requiredIngredients);
                     quantity--;
                     allKitchensBusy = false;
                     if (quantity == 0) {

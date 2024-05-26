@@ -65,6 +65,8 @@ namespace Plazza
 
             static void sighandler(int);
 
+            bool shouldClose() const;
+    void stop();
             bool isAvailable(const std::map<Ingredients, int>& requiredIngredients);
             bool preparePizza(std::string name, std::string size);
             int checkCooksStatus();
@@ -72,6 +74,7 @@ namespace Plazza
             int calculateCookingTime(const std::string& name, const std::string& size);
             void restockIngredients();
             static void _restockIngredients(Kitchen* self, std::chrono::milliseconds sleepTime);
+            void reducIngredients(const std::map<Ingredients, int>& ingredients);
 
             void startMonitoring(); // Démarrer la surveillance
             void stopMonitoring(); // Arrêter la surveillance
