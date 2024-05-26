@@ -254,6 +254,10 @@ namespace Plazza
 
     void Kitchen::displayStatus()
     {
+        if (!this->_running) {
+            std::cout << "\tKitchen is closed due to inactivity." << std::endl;
+            return;
+        }
         std::cout << "\tCooks status:" << std::endl;
         for (const auto& chef : this->_chefs) {
             std::cout << "\t\tChef " << chef->getId() + 1 << ": " << (chef->isAvailable() ? "Available" : "Busy") << std::endl;
