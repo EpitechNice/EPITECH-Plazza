@@ -106,14 +106,6 @@ namespace Plazza
             std::exit(0);
         }
         this->_processList.push_back(process);
-        // process.killPid();
-        // else {
-            // std::shared_ptr<Kitchen> newKitchen = std::make_shared<Kitchen>(this->_multiplierCooking, this->_numChefs, this->_restockTime);
-            // this->_kitchenList.push_back(newKitchen);
-        // }
-
-        // if (_process.getType() == Plazza::processType::CHILD)
-            // auto firstKitchen = std::make_shared<Kitchen>(this->_multiplierCooking, this->_numChefs, this->_restockTime);
     }
 
     void Manager::stringToLower(std::string& str) const
@@ -151,7 +143,6 @@ namespace Plazza
         if (!kitchenCount) {
             auto newKitchen = std::make_shared<Kitchen>(this->_multiplierCooking, this->_numChefs, this->_restockTime);
             this->_kitchenList.push_back(newKitchen);
-            // this->createKitchen();
             kitchenCount++;
         }
 
@@ -195,16 +186,6 @@ namespace Plazza
                 std::cout << "All kitchens are busy, creating a new kitchen..." << std::endl;
                 std::shared_ptr<Kitchen> newKitchen = std::make_shared<Kitchen>(this->_multiplierCooking, this->_numChefs, this->_restockTime);
                 this->_kitchenList.push_back(newKitchen);
-
-                // this->createKitchen();
-
-
-                // while (quantity > 0 && newKitchen->isAvailable(requiredIngredients)) {
-                    // std::cout << "New kitchen preparing pizza..." << std::endl;
-                    // if (!newKitchen->preparePizza(tokens[0], tokens[1]))
-                        // break;
-                    // quantity--;
-                // }
             }
 
             std::cout << "\tRemaining quantity: " << quantity << std::endl;

@@ -44,9 +44,6 @@ namespace Plazza
         } catch (const std::invalid_argument& e) {
             throw_exception(Flint::Exceptions::ParsingError, "Invalid value for type double: " + std::string(argv[1]));
         }
-        // if (this->_multiplierTime > 1.0 &&
-        //     (this->_multiplierTime != (int)this->_multiplierTime))
-        //     throw_exception(Flint::Exceptions::ParsingError, "Multiplier should be 0 < x < 1 or integer value");
         if (std::string(argv[1]).find('-') != std::string::npos)
             throw_exception(Flint::Exceptions::ParsingError, "Values should not be negatives !");
         if (std::string(argv[2]).find('.') != std::string::npos ||

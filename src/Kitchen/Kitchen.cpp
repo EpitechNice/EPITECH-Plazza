@@ -36,14 +36,6 @@ namespace Plazza
         this->_keepRunnin.lock();
     }
 
-    // void Kitchen::sighandler(int sig)
-    // {
-    //     if (sig != SIGUSR2)
-    //         return;
-    //     Kitchen::instance->stopMonitoring();
-    //     std::exit(0);
-    // }
-
     Kitchen::~Kitchen()
     {
         this->stopMonitoring();
@@ -84,7 +76,6 @@ namespace Plazza
             if (chef->isAvailable()) {
                 chef->takeOrder();
                 // Assigner la pizza à un seul chef et démarrer la cuisson dans un thread détaché
-                // std::shared_ptr<Plazza::PizzaPool> newPtr = this->_pool;
                 std::thread([=]() {
                     chef->cook(name, size, cookingTime);
                     }).detach();
@@ -175,26 +166,6 @@ namespace Plazza
                 this->_toClose = true;
                 this->_running = false;
             }
-
-            // if (this->checkCooksStatus() == 1) {
-            //     std::cout << "First check passed, pausing for 2 seconds..." << std::endl;
-
-            //     auto start = std::chrono::steady_clock::now();
-            //     std::this_thread::sleep_for(std::chrono::seconds(2));
-            //     auto end = std::chrono::steady_clock::now();
-            //     std::chrono::duration<double> elapsed_seconds = end - start;
-            //     std::cout << "Pause finished after " << elapsed_seconds.count() << " seconds, checking status again..." << std::endl;
-
-            //     if (checkCooksStatus() == 1) {
-            //         std::lock_guard<std::mutex> lock(this->_mutex);
-
-            //         if (!this->_toClose) {
-            //             std::cout << "\tThe kitchen is closed because no pizzas were being prepared and the ingredients had run out." << std::endl;
-            //             this->_toClose = true;
-            //             this->_running = false;
-            //         }
-            //     }
-            // }
         }
     }
 
@@ -248,11 +219,6 @@ namespace Plazza
         }
     }
 
-    bool Kitchen::getClose()
-    {
-        return this->_toClose;
-    }
-
     void Kitchen::displayStatus()
     {
         if (!this->_running) {
@@ -280,83 +246,3 @@ namespace Plazza
         return make_str(display_attr(_running) << ", " << display_attr(_multiplierCooking) << ", " << display_attr(_restockTime));
     }
 }
-// namespace Plazza
-// {
-//     Kitchen::Kitchen(double multiplierCooking, int numChefs, int restockTime)
-//     {
-//         this->_multiplierCooking = multiplierCooking;
-//         this->_restockTime = restockTime;
-//         for (int i = 0; i < numChefs; i++) {
-//             this->_chefs.push_back(std::make_shared<Plazza::Chef>(i));
-//         }
-//         std::lock_guard<std::mutex> lock(this->_mutex.getMutex());
-//     }
-
-//     Kitchen::~Kitchen()
-//     {}
-
-//     bool Kitchen::isAvailable(const std::map<Ingredients, int>& requiredIngredients)
-//     {
-//         std::lock_guard<std::mutex> lock(this->_mutex.getMutex());
-//         // if (this->_toClose)
-//         //     return false;
-//         bool enoughIngredients = true;
-
-//         for (const auto& ingredient : requiredIngredients) {
-//             if (this->_ingredientsStock[ingredient.first] < ingredient.second) {
-//                 enoughIngredients = false;
-//                 break;
-//             }
-//         }
-//         return enoughIngredients;
-//     }
-
-//     std::string Kitchen::getIngredientName(Ingredients ingredient)
-//     {
-//         switch (ingredient) {
-//             case Ingredients::Dough:
-//                 return "Dough";
-//             case Ingredients::Tomato:
-//                 return "Tomato";
-//             case Ingredients::Gruyere:
-//                 return "Gruyere";
-//             case Ingredients::Ham:
-//                 return "Ham";
-//             case Ingredients::Mushrooms:
-//                 return "Mushrooms";
-//             case Ingredients::Eggplant:
-//                 return "Eggplant";
-//             case Ingredients::GoatCheese:
-//                 return "GoatCheese";
-//             case Ingredients::ChiefLove:
-//                 return "ChiefLove";
-//             case Ingredients::Steak:
-//                 return "Steak";
-//             default: return "Unknown ingredient";
-//         }
-//     }
-
-//     void Kitchen::displayStatus()
-//     {
-//         std::cout << "\tCooks status:" << std::endl;
-//         for (const auto& chef : this->_chefs) {
-//             std::cout << "\t\tChef " << chef->getId() << ": " << (chef->isAvailable() ? "Available" : "Busy") << std::endl;
-//         }
-
-//         std::cout << "\tIngredients stock:" << std::endl;
-//         for (const auto& ingredient : this->_ingredientsStock) {
-//             std::cout << "\t\t" << this->getIngredientName(ingredient.first) << ": " << ingredient.second << std::endl;
-//         }
-//     }
-
-//     std::string Kitchen::str() const
-//     {
-//         return make_str(display_attr(_running) << ", " << display_attr(_multiplierCooking) << ", " << display_attr(_restockTime));
-//     }
-
-//     void Kitchen::waitDeath()
-//     {
-//         std::lock_guard<std::mutex> lock(this->_mutex.getMutex());
-//     }
-// }
-

@@ -80,7 +80,6 @@ namespace Plazza
             void stopMonitoring(); // Arrêter la surveillance
 
             std::string getIngredientName(Ingredients ingredient);
-            bool getClose();
 
             void displayStatus();
             void waitDeath();
