@@ -244,7 +244,7 @@ namespace Plazza
 
         if (pos_start >= str.size())
             return output;
-    
+
         if (str.substr(pos_start).size())
             output.push_back(str.substr(pos_start));
 

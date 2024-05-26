@@ -26,9 +26,7 @@ namespace Plazza
         this->_multiplierCooking = multiplierCooking;
         this->_restockTime = restockTime;
         this->_nbPizzaKitchen = 0;
-        // Kitchen::instance = this;
         this->_pool = std::make_shared<Plazza::PizzaPool>();
-        // std::signal(SIGUSR2, Kitchen::sighandler);
         for (int i = 0; i < numChefs; i++) {
             this->_chefs.push_back(std::make_shared<Plazza::Chef>(i));
         }
@@ -75,7 +73,6 @@ namespace Plazza
         for (auto& chef : this->_chefs) {
             if (chef->isAvailable()) {
                 chef->takeOrder();
-                // Assigner la pizza à un seul chef et démarrer la cuisson dans un thread détaché
                 std::thread([=]() {
                     chef->cook(name, size, cookingTime);
                     }).detach();
@@ -104,11 +101,9 @@ namespace Plazza
     {
         for (const auto& ingredient : this->_ingredientsStock) {
             if (ingredient.second < 1) {
-                //Ingrédient épuisé
                 return true;
             }
         }
-        //Tous les ingrédients sont dispo
         return false;
     }
 
@@ -151,7 +146,6 @@ namespace Plazza
         self->_ingredientsStock[Ingredients::GoatCheese] += 1;
         self->_ingredientsStock[Ingredients::ChiefLove] += 1;
         self->_ingredientsStock[Ingredients::Steak] += 1;
-
     }
 
     void Kitchen::monitorActivity()
@@ -179,7 +173,6 @@ namespace Plazza
             this->_monitorThread.join();
         }
     }
-
 
     void Kitchen::startMonitoring()
     {

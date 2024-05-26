@@ -27,8 +27,6 @@ namespace Plazza
 
     Thread::~Thread()
     {
-        //Pq faut le supprimer ?
-        // if (this->_running)
         this->join();
     }
 

@@ -42,10 +42,6 @@ namespace Plazza
         }
 
         std::cout << "Main PID: " << Flint::Colors::PURPLE << getpid() << Flint::Colors::RESET << std::endl;
-
-        // std::cout << "DEBUG | Multiplier time: " << Parsing::get().getMultiplierTime() << std::endl;
-        // std::cout << "DEBUG | Nb cooks: " << Parsing::get().getNbCooks() << std::endl;
-        // std::cout << "DEBUG | Refill time: " << Parsing::get().getRefillTime() << std::endl;
         this->loop(multiplierCooking, numChefs, restockTime);
     }
 
