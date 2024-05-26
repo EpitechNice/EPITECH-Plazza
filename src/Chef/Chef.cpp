@@ -28,7 +28,7 @@ namespace Plazza
 //TODO : Clock
     void Chef::cook(const std::string& name, const std::string& size, int cookingTime)
     {
-        std::lock_guard<std::mutex> lock(this->_mutex.getMutex());
+        std::lock_guard<Plazza::Mutex> lock(this->_mutex);
         std::cout << "\tThe Cook " << _id << " is preparing a pizza " << name << " of size " << size << "..." << std::endl;
         std::this_thread::sleep_for(std::chrono::milliseconds(cookingTime * 1000));
         std::cout << "\tPizza " << name << " of size " << size << " was prepared by Cook " << _id << std::endl;

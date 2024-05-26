@@ -33,6 +33,7 @@ namespace Plazza
             this->_chefs.push_back(std::make_shared<Plazza::Chef>(i));
         }
         this->startMonitoring();
+        this->_keepRunnin.lock();
     }
 
     // void Kitchen::sighandler(int sig)
@@ -64,7 +65,7 @@ namespace Plazza
         return enoughIngredients;
     }
 
-    void Kitchen::preparePizza(std::string name, std::string size)
+    bool Kitchen::preparePizza(std::string name, std::string size)
     {
         std::cout << "\tPreparing pizza " << name << " of size " << size << "..." << std::endl;
         int cookingTime = calculateCookingTime(name, size);
@@ -74,16 +75,18 @@ namespace Plazza
                 chef->takeOrder();
                 // Assigner la pizza à un seul chef et démarrer la cuisson dans un thread détaché
                 // std::shared_ptr<Plazza::PizzaPool> newPtr = this->_pool;
-            std::thread([=]() {
-                chef->cook(name, size, cookingTime);
-                }).detach();
-            pizzaAssigned = true;
-            break;
+                std::thread([=]() {
+                    chef->cook(name, size, cookingTime);
+                    }).detach();
+                this->_nbPizzaKitchen++;
+                pizzaAssigned = true;
+                break;
             }
         }
         if (!pizzaAssigned) {
             std::cout << "\tAll the chefs are busy. The pizza " << name << " of size " << size << " cannot be prepared at the moment." << std::endl;
         }
+        return pizzaAssigned;
     }
 
     int Kitchen::checkCooksStatus()
@@ -96,16 +99,16 @@ namespace Plazza
         return 1;
     }
 
-    int Kitchen::checkIngredients()
+    bool Kitchen::checkIngredients()
     {
         for (const auto& ingredient : this->_ingredientsStock) {
             if (ingredient.second < 1) {
                 //Ingrédient épuisé
-                return 1;
+                return true;
             }
         }
         //Tous les ingrédients sont dispo
-        return 0;
+        return false;
     }
 
     int Kitchen::calculateCookingTime(const std::string& name, const std::string& size)
@@ -127,50 +130,61 @@ namespace Plazza
 
     void Kitchen::restockIngredients()
     {
-        std::lock_guard<std::mutex> lock(this->_mutex.getMutex());
-        this->_ingredientsStock[Ingredients::Dough] += 1;
-        this->_ingredientsStock[Ingredients::Tomato] += 1;
-        this->_ingredientsStock[Ingredients::Gruyere] += 1;
-        this->_ingredientsStock[Ingredients::Ham] += 1;
-        this->_ingredientsStock[Ingredients::Mushrooms] += 1;
-        this->_ingredientsStock[Ingredients::Eggplant] += 1;
-        this->_ingredientsStock[Ingredients::GoatCheese] += 1;
-        this->_ingredientsStock[Ingredients::ChiefLove] += 1;
-        this->_ingredientsStock[Ingredients::Steak] += 1;
+        std::chrono::milliseconds sleepTime(this->_restockTime);
+
+        std::thread(Kitchen::_restockIngredients, this, sleepTime);
     }
 
-void Kitchen::monitorActivity()
-{
-    std::size_t value;
-    while (this->_running && !this->_toClose) {
-        value = this->_nbPizzaKitchen;
-        std::this_thread::sleep_for(std::chrono::seconds(5));
-        if (value == this->_nbPizzaKitchen) {
-            std::cout << "No pizza done for 5 secs. Exiting..." << std::endl;
-            this->_toClose = true;
+    void Kitchen::_restockIngredients(Kitchen* self, std::chrono::milliseconds sleepTime)
+    {
+        std::this_thread::sleep_for(sleepTime);
+
+        std::lock_guard<Plazza::Mutex> lock(self->_mutex);
+        self->_ingredientsStock[Ingredients::Dough] += 1;
+        self->_ingredientsStock[Ingredients::Tomato] += 1;
+        self->_ingredientsStock[Ingredients::Gruyere] += 1;
+        self->_ingredientsStock[Ingredients::Ham] += 1;
+        self->_ingredientsStock[Ingredients::Mushrooms] += 1;
+        self->_ingredientsStock[Ingredients::Eggplant] += 1;
+        self->_ingredientsStock[Ingredients::GoatCheese] += 1;
+        self->_ingredientsStock[Ingredients::ChiefLove] += 1;
+        self->_ingredientsStock[Ingredients::Steak] += 1;
+
+    }
+
+    void Kitchen::monitorActivity()
+    {
+        std::size_t value;
+        while (this->_running && !this->_toClose) {
+            value = this->_nbPizzaKitchen;
+            std::this_thread::sleep_for(std::chrono::seconds(5));
+            if (value == this->_nbPizzaKitchen) {
+                std::cout << "\rNo pizza done for 5 secs. Exiting...\n> " << std::flush;
+                this->_keepRunnin.unlock();
+                this->_toClose = true;
+            }
+
+            // if (this->checkCooksStatus() == 1) {
+            //     std::cout << "First check passed, pausing for 2 seconds..." << std::endl;
+
+            //     auto start = std::chrono::steady_clock::now();
+            //     std::this_thread::sleep_for(std::chrono::seconds(2));
+            //     auto end = std::chrono::steady_clock::now();
+            //     std::chrono::duration<double> elapsed_seconds = end - start;
+            //     std::cout << "Pause finished after " << elapsed_seconds.count() << " seconds, checking status again..." << std::endl;
+
+            //     if (checkCooksStatus() == 1) {
+            //         std::lock_guard<std::mutex> lock(this->_mutex);
+
+            //         if (!this->_toClose) {
+            //             std::cout << "\tThe kitchen is closed because no pizzas were being prepared and the ingredients had run out." << std::endl;
+            //             this->_toClose = true;
+            //             this->_running = false;
+            //         }
+            //     }
+            // }
         }
-
-        // if (this->checkCooksStatus() == 1) {
-        //     std::cout << "First check passed, pausing for 2 seconds..." << std::endl;
-
-        //     auto start = std::chrono::steady_clock::now();
-        //     std::this_thread::sleep_for(std::chrono::seconds(2));
-        //     auto end = std::chrono::steady_clock::now();
-        //     std::chrono::duration<double> elapsed_seconds = end - start;
-        //     std::cout << "Pause finished after " << elapsed_seconds.count() << " seconds, checking status again..." << std::endl;
-
-        //     if (checkCooksStatus() == 1) {
-        //         std::lock_guard<std::mutex> lock(this->_mutex);
-
-        //         if (!this->_toClose) {
-        //             std::cout << "\tThe kitchen is closed because no pizzas were being prepared and the ingredients had run out." << std::endl;
-        //             this->_toClose = true;
-        //             this->_running = false;
-        //         }
-        //     }
-        // }
     }
-}
 
     void Kitchen::startMonitoring()
     {
@@ -228,9 +242,9 @@ void Kitchen::monitorActivity()
         }
     }
 
-        void Kitchen::waitDeath()
+    void Kitchen::waitDeath()
     {
-        std::lock_guard<std::mutex> lock(this->_mutex.getMutex());
+        this->_keepRunnin.lock();
     }
 
     std::string Kitchen::str() const

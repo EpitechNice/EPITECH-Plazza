@@ -31,6 +31,7 @@ namespace Plazza
         if (this->_pid == 0) {
             this->_running = false;
             this->_type = processType::CHILD;
+            std::cout << "New child: " << Flint::Colors::F_PURPLE << getpid() << Flint::Colors::RESET << std::endl;
         } else {
         //In parent processus
             this->_running = true;

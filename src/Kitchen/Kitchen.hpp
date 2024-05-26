@@ -28,7 +28,8 @@ namespace Plazza
     class Kitchen: public Flint::Inspection<Kitchen>
     {
         private:
-            Mutex _mutex;
+            Plazza::Mutex _mutex;
+            Plazza::Mutex _keepRunnin;
             std::thread _monitorThread;
 
             double _multiplierCooking;
@@ -65,11 +66,12 @@ namespace Plazza
             static void sighandler(int);
 
             bool isAvailable(const std::map<Ingredients, int>& requiredIngredients);
-            void preparePizza(std::string name, std::string size);
+            bool preparePizza(std::string name, std::string size);
             int checkCooksStatus();
-            int checkIngredients();
+            bool checkIngredients();
             int calculateCookingTime(const std::string& name, const std::string& size);
             void restockIngredients();
+            static void _restockIngredients(Kitchen* self, std::chrono::milliseconds sleepTime);
 
             void startMonitoring(); // Démarrer la surveillance
             void stopMonitoring(); // Arrêter la surveillance

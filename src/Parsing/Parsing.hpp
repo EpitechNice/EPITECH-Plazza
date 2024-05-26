@@ -36,6 +36,8 @@ namespace Plazza
 
             void parse(int argc, char** argv);
 
+            bool isNumeric(const std::string& str) const;
+
             double getMultiplierTime() const;
             int getNbCooks() const;
             std::size_t getRefillTime() const;

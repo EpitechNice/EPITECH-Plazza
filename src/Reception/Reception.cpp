@@ -43,6 +43,7 @@ namespace Plazza
                 std::cerr << e << std::endl;
             }
         }
+        std::cout << "\rReception closed, get out, peasents" << std::endl;
     }
 
     void Reception::notifyReadyPizza(const std::string& pizza)

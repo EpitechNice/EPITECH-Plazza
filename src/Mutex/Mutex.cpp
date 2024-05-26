@@ -35,6 +35,5 @@ namespace Plazza
     {
         return this->_mutex;
     }
-
 }
 

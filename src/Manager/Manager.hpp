@@ -21,16 +21,18 @@
     #include "../Kitchen/Kitchen.hpp"
     #include "../Process/Process.hpp"
     #include "../Protocol/PizzaPool.hpp"
+    #include "../Thread/Thread.hpp"
 
 namespace Plazza
 {
     class Manager: public Flint::Inspection<Manager>
     {
         private:
-            std::mutex _mutex;
+            Plazza::Mutex _mutex;
             std::vector<std::shared_ptr<Plazza::Kitchen>> _kitchenList;
             std::vector<std::shared_ptr<Plazza::Process>> _processList;
             std::shared_ptr<Plazza::PizzaPool> _pizzaPool;
+            Plazza::Mutex _kitchenListAccess;
             double _multiplierCooking;
             int _numChefs;
             int _restockTime;

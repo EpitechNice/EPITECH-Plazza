@@ -25,11 +25,20 @@ namespace Plazza
         return instance;
     }
 
+    bool Parsing::isNumeric(const std::string& str) const
+    {
+        std::string::const_iterator it = str.begin();
+        while (it != str.end() && std::isdigit(*it)) ++it;
+        return !str.empty() && it == str.end();
+    }
+
     void Parsing::parse(int argc, char** argv)
     {
         if (argc != 4)
             throw_exception(Flint::Exceptions::ParsingError, "Required 3 arguments, but got " + std::to_string(argc - 1));
 
+        if (!this->isNumeric(argv[1]))
+            throw_exception(Flint::Exceptions::ParsingError, "Invalid value for type double: " + std::string(argv[1]));
         try {
             this->_multiplierTime = std::stod(argv[1]);
         } catch (const std::invalid_argument& e) {
@@ -47,11 +56,18 @@ namespace Plazza
             std::string(argv[3]).find('-') != std::string::npos)
             throw_exception(Flint::Exceptions::ParsingError, "Invalid value for type std::size_t: " + std::string(argv[3]));
 
+        if (!this->isNumeric(argv[2]))
+            throw_exception(Flint::Exceptions::ParsingError, "Invalid value for type double: " + std::string(argv[2]));
+
         try {
             this->_nbCooks = std::stoul(argv[2]);
         } catch (const std::invalid_argument& e) {
             throw_exception(Flint::Exceptions::ParsingError, "Invalid value for type std::size_t: " + std::string(argv[2]));
         }
+
+        if (!this->isNumeric(argv[3]))
+            throw_exception(Flint::Exceptions::ParsingError, "Invalid value for type double: " + std::string(argv[3]));
+
         try {
             this->_refillTime = std::stoul(argv[3]);
         } catch (const std::invalid_argument& e) {

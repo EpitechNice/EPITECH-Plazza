@@ -34,6 +34,8 @@ namespace Plazza
 
             void loop(double multiplierCooking, int numChefs, int restockTime);
 
+            static void handle_exception();
+
             std::string str() const;
     };
 }

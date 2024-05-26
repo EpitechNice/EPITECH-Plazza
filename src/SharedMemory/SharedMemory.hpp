@@ -27,8 +27,8 @@ namespace Plazza
     #pragma pack(push, 1)
     struct SharedData {
         int orderId;
-        std::string pizzaType;
-        int size;
+        Plazza::PizzaType pizzaType;
+        Plazza::PizzaSize size;
         bool isReady;
     };
     #pragma pack(pop)
@@ -47,7 +47,7 @@ namespace Plazza
 
             void updateData(Plazza::SharedData& newData);
 
-            Plazza::SharedData* getData() const;
+            const Plazza::SharedData* getData() const;
     };
 }
 
